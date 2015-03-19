@@ -35,9 +35,40 @@ class Oryzae(Model):
 class Head(Model):
 
   def __init__(self):
-    pass
+    self.hairs = [
+      Hair(0.0),
+      Hair(60.0),
+      Hair(120.0),
+      Hair(-60.0),
+      Hair(-120.0),
+    ]
 
   def _draw(self):
     gluSphere(quadric, 1.0, 32, 32)
+    for hair in self.hairs:
+      hair.render()
 
 # // Head
+
+class Hair(Model):
+
+  def __init__(self, degree):
+    self.degree = degree
+    self.node = HairNode()
+
+  def _draw(self):
+    glRotate(self.degree, 0.0, 0.0, 1.0)
+    glTranslate(0.0, 1.0, 0.0)
+    self.node.render()
+
+# // Hair
+
+class HairNode(Model):
+
+  def __init__(self):
+    pass
+
+  def _draw(self):
+    gluSphere(quadric, 0.2, 32, 32)
+
+# // HairNode

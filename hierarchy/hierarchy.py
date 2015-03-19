@@ -6,6 +6,10 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+import oryzae
+
+model = None
+
 def keyboard(ch, x, y):
   if ch == chr(27):
     sys.exit(0)
@@ -14,7 +18,7 @@ def keyboard(ch, x, y):
 def display():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-  # TODO: draw
+  model.render()
 
   glutSwapBuffers()
   return
@@ -33,6 +37,12 @@ def init():
 
   glMatrixMode(GL_MODELVIEW)
 
+def makeModel():
+  global model
+  pos = (0.0, 0.0, -3.0)
+  scale = (1.0, 1.0, 1.0)
+  model = oryzae.Oryzae(pos, scale)
+
 if __name__ == "__main__":
   glutInit(['hierarchy'])
   glutInitWindowPosition(100, 100)
@@ -43,4 +53,5 @@ if __name__ == "__main__":
   glutKeyboardFunc(keyboard)
 
   init()
+  makeModel()
   glutMainLoop()

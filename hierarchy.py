@@ -19,22 +19,28 @@ def display():
   glutSwapBuffers()
   return
 
-if __name__ == "__main__":
-  glutInit(['hierarchy'])
-  glutInitWindowPosition(100, 100)
-  glutInitWindowSize(800, 600)
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-  glutCreateWindow('Hierarchical model by Gyumin Sim')
-  glutDisplayFunc(display)
-  glutKeyboardFunc(keyboard)
-
+def init():
   glClearDepth(1.0)
   glClearColor(0.0, 0.0, 0.0, 0.0)
+
+  glEnable(GL_DEPTH_TEST)
+  glEnable(GL_LIGHTING)
+  glEnable(GL_LIGHT0)
+  glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 1.0))
 
   glMatrixMode(GL_PROJECTION)
   glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 30)
 
   glMatrixMode(GL_MODELVIEW)
-  glEnable(GL_DEPTH_TEST)
-  glShadeModel(GL_FLAT)
+
+if __name__ == "__main__":
+  glutInit(['hierarchy'])
+  glutInitWindowPosition(100, 100)
+  glutInitWindowSize(600, 600)
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+  glutCreateWindow('Hierarchical model by Gyumin Sim')
+  glutDisplayFunc(display)
+  glutKeyboardFunc(keyboard)
+
+  init()
   glutMainLoop()

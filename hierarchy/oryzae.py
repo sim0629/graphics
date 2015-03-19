@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import math
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
@@ -52,12 +53,18 @@ class Head(Model):
 
 class Hair(Model):
 
+  tilt = 5.0
+  roll_axis_x = 0
+  roll_axis_y = -math.sin(tilt / 180.0 * math.pi)
+  roll_axis_z = math.cos(tilt / 180.0 * math.pi)
+
   def __init__(self, degree):
     self.degree = degree
-    self.node = HairNode()
+    self.node = HairNode(HairNode(HairNode()))
 
   def _draw(self):
-    glRotate(self.degree, 0.0, 0.0, 1.0)
+    glRotate(Hair.tilt, -1.0, 0.0, 0.0)
+    glRotate(self.degree, Hair.roll_axis_x, Hair.roll_axis_y, Hair.roll_axis_z)
     glTranslate(0.0, 1.0, 0.0)
     self.node.render()
 
@@ -65,10 +72,14 @@ class Hair(Model):
 
 class HairNode(Model):
 
-  def __init__(self):
-    pass
+  def __init__(self, next_node=None):
+    self.next_node = next_node
 
   def _draw(self):
+    glTranslate(0.0, 0.1, 0.0)
     gluSphere(quadric, 0.2, 32, 32)
+    glTranslate(0.0, 0.2, 0.0)
+    if self.next_node:
+      self.next_node.render()
 
 # // HairNode

@@ -7,3 +7,8 @@ Requirements
 ------------
 * Python 2.7
 * `pip install -r requirements.txt`
+
+Hierarchy
+---------
+* Assignment #1
+* Run `python hierarchy`

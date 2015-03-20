@@ -5,8 +5,6 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
-quadric = gluNewQuadric()
-
 class Model:
 
   def _draw(self):
@@ -45,7 +43,7 @@ class Head(Model):
     ]
 
   def _draw(self):
-    gluSphere(quadric, 1.0, 32, 32)
+    glutSolidSphere(1.0, 32, 32)
     for hair in self.hairs:
       hair.render()
 
@@ -77,7 +75,7 @@ class HairNode(Model):
 
   def _draw(self):
     glTranslate(0.0, 0.1, 0.0)
-    gluSphere(quadric, 0.2, 32, 32)
+    glutSolidSphere(0.2, 32, 32)
     glTranslate(0.0, 0.2, 0.0)
     if self.next_node:
       self.next_node.render()

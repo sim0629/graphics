@@ -60,7 +60,7 @@ if __name__ == "__main__":
   glutInitWindowPosition(100, 100)
   glutInitWindowSize(600, 600)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-  glutCreateWindow('Hierarchical model by Gyumin Sim')
+  glutCreateWindow('Hierarchical model "KAMOSUZO-" by Gyumin Sim')
   glutDisplayFunc(display)
   glutKeyboardFunc(keyboard)
 

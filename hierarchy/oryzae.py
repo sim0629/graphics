@@ -1,11 +1,25 @@
 # coding: utf-8
 
 import numpy
+import numpy.random
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
 X, Y, Z = 0, 1, 2
+
+class Animation:
+
+  def __init__(self, speed):
+    self.ratio = 0.0
+    self._increment = speed
+
+  def update(self):
+    self.ratio += self._increment
+    if self.ratio >= 1.0 or self.ratio <= 0.0:
+      self._increment = -self._increment
+
+# // Animation
 
 class Model:
 
@@ -16,6 +30,9 @@ class Model:
     glPushMatrix()
     self._draw()
     glPopMatrix()
+
+  def update(self):
+    pass
 
 # // Model
 
@@ -36,6 +53,10 @@ class Oryzae(Model):
     glRotate(self.degree_tilt, 1.0, 0.0, 0.0)
     self.head.render()
     self.body.render()
+
+  def update(self):
+    self.head.update()
+    self.body.update()
 
   def pan(self, degree):
     self.degree_pan += degree
@@ -60,15 +81,28 @@ class Head(Model):
       Eye(-60.0),
     ]
     self.mouth = Mouth()
+    self.roll = 0.0
+    self.animation = Animation(0.01)
+    self.animation.ratio = 0.5
 
   def _draw(self):
     glColor(1.0, 1.0, 0.6)
+    glRotate(self.roll, 0.0, 0.0, 1.0)
     glutSolidSphere(1.0, 32, 32)
     for hair in self.hairs:
       hair.render()
     for eye in self.eyes:
       eye.render()
     self.mouth.render()
+
+  def update(self):
+    self.roll = (self.animation.ratio - 0.5) * 20.0
+    self.animation.update()
+    for hair in self.hairs:
+      hair.update()
+    for eye in self.eyes:
+      eye.update()
+    self.mouth.update()
 
 # // Head
 
@@ -89,19 +123,31 @@ class Hair(Model):
     glTranslate(0.0, 1.0, 0.0)
     self.node.render()
 
+  def update(self):
+    self.node.update()
+
 # // Hair
 
 class HairNode(Model):
 
   def __init__(self, next_node=None):
     self.next_node = next_node
+    self.tilt = 0.0
+    self.animation = Animation(0.02 - numpy.random.random() * 0.01)
 
   def _draw(self):
     glTranslate(0.0, 0.1, 0.0)
     glutSolidSphere(0.2, 32, 32)
+    glRotate(self.tilt, -1.0, 0.0, 0.0)
     glTranslate(0.0, 0.2, 0.0)
     if self.next_node:
       self.next_node.render()
+
+  def update(self):
+    self.tilt = self.animation.ratio * 30.0
+    self.animation.update()
+    if self.next_node:
+      self.next_node.update()
 
 # // HairNode
 
@@ -159,6 +205,7 @@ class Body(Model):
       [0.25, 0.2, -0.25],
       [-0.25, 0.2, -0.25],
     ]
+    self.animation = Animation(0.02)
 
   def _normal(self, n):
     return numpy.cross(
@@ -181,5 +228,13 @@ class Body(Model):
       glVertex(self.bottom_list[j][X], self.bottom_list[j][Y], self.bottom_list[j][Z])
       glVertex(self.top_list[j][X], self.top_list[j][Y], self.top_list[j][Z])
     glEnd()
+
+  def update(self):
+    v = 0.3 + self.animation.ratio * 0.05
+    self.animation.update()
+    self.bottom_list[0][X], self.bottom_list[0][Z] = -v, v
+    self.bottom_list[1][X], self.bottom_list[1][Z] = v, v
+    self.bottom_list[2][X], self.bottom_list[2][Z] = v, -v
+    self.bottom_list[3][X], self.bottom_list[3][Z] = -v, -v
 
 # // Body

@@ -55,6 +55,7 @@ class Head(Model):
     ]
 
   def _draw(self):
+    glColor(1.0, 1.0, 0.6)
     glutSolidSphere(1.0, 32, 32)
     for hair in self.hairs:
       hair.render()
@@ -119,6 +120,7 @@ class Body(Model):
     )
 
   def _draw(self):
+    glColor(1.0, 1.0, 0.6)
     glTranslate(0.0, -1.0, 0.0)
     glBegin(GL_QUADS)
     for i in xrange(4):

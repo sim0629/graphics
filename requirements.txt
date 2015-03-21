@@ -1,2 +1,3 @@
+numpy
 PyOpenGL
 PyOpenGL_accelerate

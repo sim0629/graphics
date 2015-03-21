@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import math
+import numpy
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
@@ -53,8 +53,8 @@ class Hair(Model):
 
   tilt = 5.0
   roll_axis_x = 0
-  roll_axis_y = -math.sin(tilt / 180.0 * math.pi)
-  roll_axis_z = math.cos(tilt / 180.0 * math.pi)
+  roll_axis_y = -numpy.sin(tilt / 180.0 * numpy.pi)
+  roll_axis_z = numpy.cos(tilt / 180.0 * numpy.pi)
 
   def __init__(self, degree):
     self.degree = degree

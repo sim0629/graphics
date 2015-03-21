@@ -13,6 +13,10 @@ model = None
 def keyboard(ch, x, y):
   if ch == chr(27):
     sys.exit(0)
+  elif ch == 'h':
+    model.rotate(True)
+  elif ch == 'l':
+    model.rotate(False)
   return 0
 
 def display():
@@ -21,6 +25,7 @@ def display():
   model.render()
 
   glutSwapBuffers()
+  glutPostRedisplay()
   return
 
 def init():

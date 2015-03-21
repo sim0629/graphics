@@ -5,9 +5,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
-X = 0
-Y = 1
-Z = 2
+X, Y, Z = 0, 1, 2
 
 class Model:
 
@@ -26,14 +24,22 @@ class Oryzae(Model):
   def __init__(self, pos, scale):
     self.pos_x, self.pos_y, self.pos_z = pos
     self.scale_x, self.scale_y, self.scale_z = scale
+    self.degree = 0
     self.head = Head()
     self.body = Body()
 
   def _draw(self):
     glTranslate(self.pos_x, self.pos_y, self.pos_z)
     glScale(self.scale_x, self.scale_y, self.scale_z)
+    glRotate(self.degree, 0.0, 1.0, 0.0)
     self.head.render()
     self.body.render()
+
+  def rotate(self, cw):
+    if cw:
+      self.degree -= 1.0
+    else:
+      self.degree += 1.0
 
 # // Oryzae
 

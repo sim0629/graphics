@@ -14,9 +14,9 @@ def keyboard(ch, x, y):
   if ch == chr(27):
     sys.exit(0)
   elif ch == 'h':
-    model.rotate(True)
+    model.pan(-1.0)
   elif ch == 'l':
-    model.rotate(False)
+    model.pan(1.0)
   return 0
 
 def display():

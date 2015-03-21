@@ -51,7 +51,7 @@ def init():
 
 def makeModel():
   global model
-  pos = (0.0, 0.0, -3.0)
+  pos = (0.0, 0.0, -4.0)
   scale = (1.0, 1.0, 1.0)
   model = oryzae.Oryzae(pos, scale)
 

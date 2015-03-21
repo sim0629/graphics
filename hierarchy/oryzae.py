@@ -57,6 +57,7 @@ class Head(Model):
       Eye(60.0),
       Eye(-60.0),
     ]
+    self.mouth = Mouth()
 
   def _draw(self):
     glColor(1.0, 1.0, 0.6)
@@ -65,6 +66,7 @@ class Head(Model):
       hair.render()
     for eye in self.eyes:
       eye.render()
+    self.mouth.render()
 
 # // Head
 
@@ -119,6 +121,26 @@ class Eye(Model):
     glutSolidSphere(0.04, 8, 8)
 
 # // Eye
+
+class Mouth(Model):
+
+  def __init__(self):
+    self.width = 1.0
+    self.height = 0.5
+    self.thickness = 0.3
+
+  def _draw(self):
+    glColor(1.0, 1.0, 1.0)
+    glRotate(15.0, 1.0, 0.0, 0.0)
+    glTranslate(0.0, 0.0, 1.0 - self.thickness * 0.5 + 0.01) # don't delete 0.01
+    glRotate(-90.0, 1.0, 0.0, 0.0)
+    glScale(self.width, self.thickness, self.height)
+    glTranslate(0.0, 0.0, -0.5)
+    quad = gluNewQuadric()
+    gluCylinder(quad, 0.5, 0.5, 1.0, 16, 16)
+    gluDeleteQuadric(quad)
+
+# // Mouth
 
 class Body(Model):
 

@@ -5,6 +5,10 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+X = 0
+Y = 1
+Z = 2
+
 class Model:
 
   def _draw(self):
@@ -23,11 +27,13 @@ class Oryzae(Model):
     self.pos_x, self.pos_y, self.pos_z = pos
     self.scale_x, self.scale_y, self.scale_z = scale
     self.head = Head()
+    self.body = Body()
 
   def _draw(self):
     glTranslate(self.pos_x, self.pos_y, self.pos_z)
     glScale(self.scale_x, self.scale_y, self.scale_z)
     self.head.render()
+    self.body.render()
 
 # // Oryzae
 
@@ -81,3 +87,42 @@ class HairNode(Model):
       self.next_node.render()
 
 # // HairNode
+
+class Body(Model):
+
+  def __init__(self):
+    self.bottom_list = [
+      [-0.3, -0.8, 0.3],
+      [0.3, -0.8, 0.3],
+      [0.3, -0.8, -0.3],
+      [-0.3, -0.8, -0.3],
+    ]
+    self.top_list = [
+      [-0.25, 0.2, 0.25],
+      [0.25, 0.2, 0.25],
+      [0.25, 0.2, -0.25],
+      [-0.25, 0.2, -0.25],
+    ]
+
+  def _normal(self, n):
+    return numpy.cross(
+      numpy.array(self.bottom_list[(n + 1) % 4])
+      - numpy.array(self.bottom_list[n]),
+      numpy.array(self.top_list[n])
+      - numpy.array(self.bottom_list[n])
+    )
+
+  def _draw(self):
+    glTranslate(0.0, -1.0, 0.0)
+    glBegin(GL_QUADS)
+    for i in xrange(4):
+      normal_vector = self._normal(i)
+      glNormal(normal_vector[0], normal_vector[1], normal_vector[2])
+      glVertex(self.top_list[i][X], self.top_list[i][Y], self.top_list[i][Z])
+      glVertex(self.bottom_list[i][X], self.bottom_list[i][Y], self.bottom_list[i][Z])
+      j = (i + 1) % 4
+      glVertex(self.bottom_list[j][X], self.bottom_list[j][Y], self.bottom_list[j][Z])
+      glVertex(self.top_list[j][X], self.top_list[j][Y], self.top_list[j][Z])
+    glEnd()
+
+# // Body

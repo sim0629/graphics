@@ -53,12 +53,18 @@ class Head(Model):
       Hair(-60.0),
       Hair(-120.0),
     ]
+    self.eyes = [
+      Eye(60.0),
+      Eye(-60.0),
+    ]
 
   def _draw(self):
     glColor(1.0, 1.0, 0.6)
     glutSolidSphere(1.0, 32, 32)
     for hair in self.hairs:
       hair.render()
+    for eye in self.eyes:
+      eye.render()
 
 # // Head
 
@@ -94,6 +100,25 @@ class HairNode(Model):
       self.next_node.render()
 
 # // HairNode
+
+class Eye(Model):
+
+  tilt = 60.0
+  roll_axis_x = 0
+  roll_axis_y = numpy.sin(tilt / 180.0 * numpy.pi)
+  roll_axis_z = numpy.cos(tilt / 180.0 * numpy.pi)
+
+  def __init__(self, degree):
+    self.degree = degree
+
+  def _draw(self):
+    glColor(0.0, 0.0, 0.0)
+    glRotate(Eye.tilt, 1.0, 0.0, 0.0)
+    glRotate(self.degree, Eye.roll_axis_x, Eye.roll_axis_y, Eye.roll_axis_z)
+    glTranslate(0.0, 1.0, 0.0)
+    glutSolidSphere(0.04, 8, 8)
+
+# // Eye
 
 class Body(Model):
 

@@ -25,6 +25,7 @@ class Oryzae(Model):
     self.pos_x, self.pos_y, self.pos_z = pos
     self.scale_x, self.scale_y, self.scale_z = scale
     self.degree_pan = 0.0
+    self.degree_tilt = 0.0
     self.head = Head()
     self.body = Body()
 
@@ -32,11 +33,15 @@ class Oryzae(Model):
     glTranslate(self.pos_x, self.pos_y, self.pos_z)
     glScale(self.scale_x, self.scale_y, self.scale_z)
     glRotate(self.degree_pan, 0.0, 1.0, 0.0)
+    glRotate(self.degree_tilt, 1.0, 0.0, 0.0)
     self.head.render()
     self.body.render()
 
   def pan(self, degree):
     self.degree_pan += degree
+
+  def tilt(self, degree):
+    self.degree_tilt += degree
 
 # // Oryzae
 

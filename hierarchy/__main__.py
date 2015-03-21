@@ -17,6 +17,10 @@ def keyboard(ch, x, y):
     model.pan(-1.0)
   elif ch == 'l':
     model.pan(1.0)
+  elif ch == 'j':
+    model.tilt(1.0)
+  elif ch == 'k':
+    model.tilt(-1.0)
   return 0
 
 def display():

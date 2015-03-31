@@ -8,6 +8,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 model = None
+camera = None
 
 def keyboard(ch, x, y):
   if ch == chr(27): # esc
@@ -60,15 +61,11 @@ def prepareModel():
   model = hierarchy.oryzae.Oryzae(pos, scale)
 
 def prepareCamera():
-  glMatrixMode(GL_MODELVIEW)
-  gluLookAt(
-    0.0, 0.0, 3.0,
-    0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0
-  )
+  import camera
 
-  glMatrixMode(GL_PROJECTION)
-  gluPerspective(90.0, 1.0, 1.0, 30.0)
+  global camera
+  camera = camera.Camera()
+  camera.init()
 
 if __name__ == "__main__":
   initializeWindow()

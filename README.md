@@ -13,3 +13,8 @@ Hierarchy
 ---------
 * Assignment #1
 * Run `python hierarchy`
+
+Viewer
+------
+* Assignment #2
+* Run `python viewer`

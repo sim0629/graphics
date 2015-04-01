@@ -9,6 +9,16 @@ from OpenGL.GL import *
 X, Y, Z = 0, 1, 2
 IN, OUT = False, True
 
+def is_pressed(flag):
+  m = glutGetModifiers()
+  return bool(m & flag)
+
+def shift_pressed():
+  return is_pressed(GLUT_ACTIVE_SHIFT)
+
+def ctrl_pressed():
+  return is_pressed(GLUT_ACTIVE_CTRL)
+
 class Camera:
 
   def __init__(self):
@@ -66,6 +76,14 @@ class Camera:
     self._perspective()
     glutPostRedisplay()
 
+  def translate(self, target):
+    # TODO
+    glutPostRedisplay()
+
+  def rotate(self, target):
+    # TODO
+    glutPostRedisplay()
+
   def keyboard(self, ch, x, y):
     if ch == 'w':
       self.doly(IN)
@@ -79,8 +97,25 @@ class Camera:
       pass
 
   def mouse(self, button, state, x, y):
-    pass
+    if state == GLUT_DOWN:
+      self.source = np.array([x, y])
+      if ctrl_pressed():
+        pass
+      elif shift_pressed():
+        self.method = 'translate'
+      else:
+        self.method = 'rotate'
+    elif state == GLUT_UP:
+      self.method = None
+    else:
+      pass
 
   def motion(self, x, y):
-    pass
+    target = np.array([x, y])
+    if self.method == 'translate':
+      self.translate(target)
+    elif self.method == 'rotate':
+      self.rotate(target)
+    else:
+      pass
 

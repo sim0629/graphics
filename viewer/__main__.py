@@ -14,10 +14,10 @@ def keyboard(ch, x, y):
   if ch == chr(27): # esc
     sys.exit(0)
   else:
-    pass
+    camera.keyboard(ch, x, y)
 
 def mouse(button, state, x, y):
-  pass
+  camera.mouse(button, state, x, y)
 
 def display():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

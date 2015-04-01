@@ -36,3 +36,9 @@ class Camera:
     self._look_at()
     self._perspective()
 
+  def keyboard(self, ch, x, y):
+    pass
+
+  def mouse(self, button, state, x, y):
+    pass
+

@@ -31,6 +31,7 @@ class Camera:
 
   def _perspective(self):
     glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
     gluPerspective(
       self.theta, self.aspect,
       self.near, self.far
@@ -54,11 +55,26 @@ class Camera:
     self._look_at()
     glutPostRedisplay()
 
+  def zoom(self, out):
+    speed = -1.0
+    if out:
+      speed = -speed
+    if speed < 0 and self.theta + speed < 1.0 \
+      or speed > 0 and self.theta + speed >= 180.0:
+      return
+    self.theta += speed
+    self._perspective()
+    glutPostRedisplay()
+
   def keyboard(self, ch, x, y):
     if ch == 'w':
       self.doly(IN)
     elif ch == 's':
       self.doly(OUT)
+    elif ch == 'd':
+      self.zoom(IN)
+    elif ch == 'a':
+      self.zoom(OUT)
     else:
       pass
 

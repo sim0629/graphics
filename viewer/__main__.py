@@ -9,17 +9,29 @@ from OpenGL.GL import *
 
 model = None
 camera = None
+width, height = 600, 600
+
+def reshape(new_width, new_height):
+  global width, height
+  width, height = new_width, new_height
+  glViewport(0, 0, width, height)
+
+def normalize_xy(x, y):
+  return x / float(width), (height - y) / float(height)
 
 def keyboard(ch, x, y):
   if ch == chr(27): # esc
     sys.exit(0)
   else:
+    x, y = normalize_xy(x, y)
     camera.keyboard(ch, x, y)
 
 def mouse(button, state, x, y):
+  x, y = normalize_xy(x, y)
   camera.mouse(button, state, x, y)
 
 def motion(x, y):
+  x, y = normalize_xy(x, y)
   camera.motion(x, y)
 
 def display():
@@ -33,10 +45,11 @@ def display():
 def initializeWindow():
   glutInit(['viewer'])
   glutInitWindowPosition(100, 100)
-  glutInitWindowSize(600, 600)
+  glutInitWindowSize(width, height)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
   glutCreateWindow('3D model viewer by Gyumin Sim')
 
+  glutReshapeFunc(reshape)
   glutDisplayFunc(display)
   glutKeyboardFunc(keyboard)
   glutMouseFunc(mouse)

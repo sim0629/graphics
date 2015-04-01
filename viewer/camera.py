@@ -77,7 +77,23 @@ class Camera:
     glutPostRedisplay()
 
   def translate(self, target):
-    # TODO
+    speed = 1.5
+
+    n = self.pos - self.ref
+    n /= np.sqrt(n.dot(n))
+    u = np.cross(self.up, n) / np.sqrt(self.up.dot(self.up))
+    v = np.cross(n, u)
+
+    displacement = target - self.source
+    du = displacement[X] * u
+    dv = displacement[Y] * v
+    diff = speed * (du + dv)
+
+    self.pos = self.prev_pos - diff
+    self.ref = self.prev_ref - diff
+
+    self._look_at()
+
     glutPostRedisplay()
 
   def rotate(self, target):
@@ -103,6 +119,8 @@ class Camera:
         pass
       elif shift_pressed():
         self.method = 'translate'
+        self.prev_pos = self.pos
+        self.prev_ref = self.ref
       else:
         self.method = 'rotate'
     elif state == GLUT_UP:

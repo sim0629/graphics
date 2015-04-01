@@ -81,3 +81,6 @@ class Camera:
   def mouse(self, button, state, x, y):
     pass
 
+  def motion(self, x, y):
+    pass
+

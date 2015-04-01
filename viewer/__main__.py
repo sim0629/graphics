@@ -19,6 +19,9 @@ def keyboard(ch, x, y):
 def mouse(button, state, x, y):
   camera.mouse(button, state, x, y)
 
+def motion(x, y):
+  camera.motion(x, y)
+
 def display():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -37,6 +40,7 @@ def initializeWindow():
   glutDisplayFunc(display)
   glutKeyboardFunc(keyboard)
   glutMouseFunc(mouse)
+  glutMotionFunc(motion)
 
 def initializeSetting():
   glClearDepth(1.0)

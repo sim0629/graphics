@@ -112,8 +112,42 @@ class Camera:
     self._look_at()
     glutPostRedisplay()
 
+  def _trackball_point(self, point):
+    n_point = self._nearplane_point(point)
+
+    v = n_point - self.prev_pos
+    v /= np.sqrt(v.dot(v))
+
+    l = self.prev_ref - self.prev_pos
+    t = l.dot(v)
+    dd = l.dot(l) - t * t
+
+    r = np.sqrt(l.dot(l)) - self.near
+    rr = r * r
+
+    if dd > rr:
+      q = self.prev_pos + t * v
+      d = np.sqrt(dd)
+      p = ((d - r) * self.prev_ref + r * q) / d
+    else: # intersects
+      dt = np.sqrt(rr - dd)
+      t -= dt
+      p = self.prev_pos + t * v
+
+    return p - self.prev_ref
+
+  def rotate_start(self, source):
+    self.prev_pos = self.pos
+    self.prev_ref = self.ref
+    self.t_source = self._trackball_point(source)
+
   def rotate(self, target):
+    t_source = self.t_source
+    t_target = self._trackball_point(target)
+
     # TODO
+
+    self._look_at()
     glutPostRedisplay()
 
   def keyboard(self, ch, x, y):
@@ -138,6 +172,7 @@ class Camera:
         self.translate_start(source)
       else:
         self.method = 'rotate'
+        self.rotate_start(source)
     elif state == GLUT_UP:
       self.method = None
     else:

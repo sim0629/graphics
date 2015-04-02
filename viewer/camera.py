@@ -77,7 +77,7 @@ class Camera:
     glutPostRedisplay()
 
   def _get_nuv(self):
-    n = self.pos - self.ref
+    n = self.prev_pos - self.prev_ref
     n /= np.sqrt(n.dot(n))
     u = np.cross(self.up, n) / np.sqrt(self.up.dot(self.up))
     v = np.cross(n, u)
@@ -88,16 +88,23 @@ class Camera:
     width = height * self.aspect
     return np.array([width, height])
 
-  def _displacement_on_nearplane(self, target):
+  def _nearplane_point(self, point):
     size = self._get_nearplane_half_size()
-    displacement = size * (target - self.source)
-    _, u, v = self._get_nuv()
-    du = displacement[X] * u
-    dv = displacement[Y] * v
-    return du + dv
+    point *= size
+    n, u, v = self._get_nuv()
+    o = self.prev_pos - self.near * n
+    du = point[X] * u
+    dv = point[Y] * v
+    return o + du + dv
+
+  def translate_start(self, source):
+    self.prev_pos = self.pos
+    self.prev_ref = self.ref
+    self.n_source = self._nearplane_point(source)
 
   def translate(self, target):
-    displacement = self._displacement_on_nearplane(target)
+    n_target = self._nearplane_point(target)
+    displacement = n_target - self.n_source
 
     self.pos = self.prev_pos - displacement
     self.ref = self.prev_ref - displacement
@@ -123,13 +130,12 @@ class Camera:
 
   def mouse(self, button, state, x, y):
     if state == GLUT_DOWN:
-      self.source = np.array([x, y])
+      source = np.array([x, y])
       if ctrl_pressed():
         pass
       elif shift_pressed():
         self.method = 'translate'
-        self.prev_pos = self.pos
-        self.prev_ref = self.ref
+        self.translate_start(source)
       else:
         self.method = 'rotate'
     elif state == GLUT_UP:

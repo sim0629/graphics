@@ -17,7 +17,8 @@ def reshape(new_width, new_height):
   glViewport(0, 0, width, height)
 
 def normalize_xy(x, y):
-  return x / float(width), (height - y) / float(height)
+  x, y = x / float(width), (height - y) / float(height)
+  return 2.0 * x - 1.0, 2.0 * y - 1.0
 
 def keyboard(ch, x, y):
   if ch == chr(27): # esc

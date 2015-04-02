@@ -19,6 +19,15 @@ def shift_pressed():
 def ctrl_pressed():
   return is_pressed(GLUT_ACTIVE_CTRL)
 
+def rotation_matrix(axis, sin, cos):
+    x, y, z = axis[X], axis[Y], axis[Z]
+    ncos = 1.0 - cos
+    return np.array([
+      [x * x * ncos + cos,     x * y * ncos - z * sin, z * x * ncos + y * sin],
+      [x * y * ncos + z * sin, y * y * ncos + cos,     y * z * ncos - x * sin],
+      [z * x * ncos - y * sin, y * z * ncos + x * sin, z * z * ncos + cos    ],
+    ])
+
 class Camera:
 
   def __init__(self):
@@ -134,7 +143,7 @@ class Camera:
       t -= dt
       p = self.prev_pos + t * v
 
-    return p - self.prev_ref
+    return p
 
   def rotate_start(self, source):
     self.prev_pos = self.pos
@@ -142,10 +151,23 @@ class Camera:
     self.t_source = self._trackball_point(source)
 
   def rotate(self, target):
-    t_source = self.t_source
-    t_target = self._trackball_point(target)
+    s = self.t_source - self.prev_ref
+    e = self._trackball_point(target) - self.prev_ref
 
-    # TODO
+    axis = np.cross(s, e)
+    se_cos = s.dot(e)
+    se_sin = np.sqrt(axis.dot(axis))
+
+    axis /= se_sin
+
+    se = np.sqrt(s.dot(s)) * np.sqrt(e.dot(e))
+    cos = se_cos / se
+    sin = se_sin / se
+
+    rot = rotation_matrix(axis, sin, cos)
+    rot = np.linalg.inv(rot)
+
+    self.pos = rot.dot(self.prev_pos - self.prev_ref) + self.prev_ref
 
     self._look_at()
     glutPostRedisplay()

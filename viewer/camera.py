@@ -76,24 +76,33 @@ class Camera:
     self._perspective()
     glutPostRedisplay()
 
-  def translate(self, target):
-    speed = 1.5
-
+  def _get_nuv(self):
     n = self.pos - self.ref
     n /= np.sqrt(n.dot(n))
     u = np.cross(self.up, n) / np.sqrt(self.up.dot(self.up))
     v = np.cross(n, u)
+    return n, u, v
 
-    displacement = target - self.source
+  def _get_nearplane_half_size(self):
+    height = np.arctan(self.theta / 2.0) * self.near
+    width = height * self.aspect
+    return np.array([width, height])
+
+  def _displacement_on_nearplane(self, target):
+    size = self._get_nearplane_half_size()
+    displacement = size * (target - self.source)
+    _, u, v = self._get_nuv()
     du = displacement[X] * u
     dv = displacement[Y] * v
-    diff = speed * (du + dv)
+    return du + dv
 
-    self.pos = self.prev_pos - diff
-    self.ref = self.prev_ref - diff
+  def translate(self, target):
+    displacement = self._displacement_on_nearplane(target)
+
+    self.pos = self.prev_pos - displacement
+    self.ref = self.prev_ref - displacement
 
     self._look_at()
-
     glutPostRedisplay()
 
   def rotate(self, target):

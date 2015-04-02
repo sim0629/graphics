@@ -6,6 +6,8 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+import quaternion as qt
+
 X, Y, Z = 0, 1, 2
 IN, OUT = False, True
 
@@ -18,15 +20,6 @@ def shift_pressed():
 
 def ctrl_pressed():
   return is_pressed(GLUT_ACTIVE_CTRL)
-
-def rotation_matrix(axis, sin, cos):
-    x, y, z = axis[X], axis[Y], axis[Z]
-    ncos = 1.0 - cos
-    return np.array([
-      [x * x * ncos + cos,     x * y * ncos - z * sin, z * x * ncos + y * sin],
-      [x * y * ncos + z * sin, y * y * ncos + cos,     y * z * ncos - x * sin],
-      [z * x * ncos - y * sin, y * z * ncos + x * sin, z * z * ncos + cos    ],
-    ])
 
 class Camera:
 
@@ -128,16 +121,23 @@ class Camera:
     v /= np.sqrt(v.dot(v))
 
     l = self.prev_ref - self.prev_pos
+    ll = l.dot(l)
+
     t = l.dot(v)
-    dd = l.dot(l) - t * t
+    dd = ll - t * t
 
     r = np.sqrt(l.dot(l)) - self.near
     rr = r * r
 
-    if dd > rr:
-      q = self.prev_pos + t * v
-      d = np.sqrt(dd)
-      p = ((d - r) * self.prev_ref + r * q) / d
+    if dd / rr > 0.97:
+      len_l = np.sqrt(ll)
+      unit_l = l / len_l
+      axis = np.cross(unit_l, v)
+      sin = r / len_l
+      s = np.sqrt(ll - rr)
+      cos = s / len_l
+      q = qt.Quaternion.from_axis_and_angle(axis, sin, cos)
+      p = self.prev_pos + s * q.rotate(unit_l)
     else: # intersects
       dt = np.sqrt(rr - dd)
       t -= dt
@@ -148,26 +148,19 @@ class Camera:
   def rotate_start(self, source):
     self.prev_pos = self.pos
     self.prev_ref = self.ref
+    self.prev_up = self.up
     self.t_source = self._trackball_point(source)
 
   def rotate(self, target):
     s = self.t_source - self.prev_ref
     e = self._trackball_point(target) - self.prev_ref
 
-    axis = np.cross(s, e)
-    se_cos = s.dot(e)
-    se_sin = np.sqrt(axis.dot(axis))
+    q = qt.Quaternion.from_two_vectors(s, e)
+    q = q.conjugate()
 
-    axis /= se_sin
-
-    se = np.sqrt(s.dot(s)) * np.sqrt(e.dot(e))
-    cos = se_cos / se
-    sin = se_sin / se
-
-    rot = rotation_matrix(axis, sin, cos)
-    rot = np.linalg.inv(rot)
-
-    self.pos = rot.dot(self.prev_pos - self.prev_ref) + self.prev_ref
+    v = self.prev_pos - self.prev_ref
+    self.pos = self.prev_ref + q.rotate(v)
+    self.up = q.rotate(self.prev_up)
 
     self._look_at()
     glutPostRedisplay()

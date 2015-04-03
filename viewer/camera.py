@@ -125,23 +125,28 @@ class Camera:
 
     t = l.dot(v)
     dd = ll - t * t
+    d = np.sqrt(dd)
 
     r = np.sqrt(l.dot(l)) - self.near
     rr = r * r
 
-    if dd / rr > 0.97:
-      len_l = np.sqrt(ll)
-      unit_l = l / len_l
-      axis = np.cross(unit_l, v)
+    len_l = np.sqrt(ll)
+    unit_l = l / len_l
+    axis = np.cross(unit_l, v)
+
+    if dd > rr:
       sin = r / len_l
       s = np.sqrt(ll - rr)
       cos = s / len_l
       q = qt.Quaternion.from_axis_and_angle(axis, sin, cos)
       p = self.prev_pos + s * q.rotate(unit_l)
     else: # intersects
+      sin = d / len_l
+      cos = t / len_l
+      q = qt.Quaternion.from_axis_and_angle(axis, sin, cos)
       dt = np.sqrt(rr - dd)
       t -= dt
-      p = self.prev_pos + t * v
+      p = self.prev_pos + t * q.rotate(unit_l)
 
     return p
 

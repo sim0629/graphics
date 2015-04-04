@@ -43,6 +43,7 @@ def display():
     model.render()
 
   glutSwapBuffers()
+  glutPostRedisplay()
 
 def initializeWindow():
   glutInit(['viewer'])

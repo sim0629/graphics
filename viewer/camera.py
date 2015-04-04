@@ -66,7 +66,6 @@ class Camera:
     v *= speed / distance
     self.pos += v
     self._look_at()
-    glutPostRedisplay()
 
   def zoom(self, out):
     speed = -1.0
@@ -77,7 +76,6 @@ class Camera:
       return
     self.theta += speed
     self._perspective()
-    glutPostRedisplay()
 
   def _get_nuv(self):
     n = self.prev_pos - self.prev_ref
@@ -113,7 +111,6 @@ class Camera:
     self.ref = self.prev_ref - displacement
 
     self._look_at()
-    glutPostRedisplay()
 
   def _trackball_point(self, point):
     n_point = self._nearplane_point(point)
@@ -169,7 +166,6 @@ class Camera:
     self.up = q.rotate(self.prev_up)
 
     self._look_at()
-    glutPostRedisplay()
 
   def _intersect_triangle_with_ray(self, triangle, ray):
     v0, v1, v2 = triangle
@@ -242,7 +238,6 @@ class Camera:
     self.up = v
 
     self._look_at()
-    glutPostRedisplay()
 
   def keyboard(self, ch, x, y):
     if ch == 'w':

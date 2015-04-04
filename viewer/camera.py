@@ -24,10 +24,10 @@ def ctrl_pressed():
 class Camera:
 
   def __init__(self):
-    self.pos = np.array([0.0, 0.0, 3.0])
+    self.pos = np.array([0.0, 0.0, 10.0])
     self.ref = np.array([0.0, 0.0, 0.0])
     self.up = np.array([0.0, 1.0, 0.0])
-    self.theta = 90.0
+    self.theta = 60.0
     self.aspect = 1.0
     self.near = 1.0
     self.far = 30.0

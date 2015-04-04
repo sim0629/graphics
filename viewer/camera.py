@@ -261,6 +261,7 @@ class Camera:
       return
 
     self.ref_interp = Interpolation(self.ref, picked)
+    self.prev_ref = picked
     _, _, v = self._get_nuv()
     self.ref_up = Interpolation(self.up, v)
 

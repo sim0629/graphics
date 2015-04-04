@@ -42,7 +42,7 @@ class Interpolation:
 
 class Camera:
 
-  def __init__(self, scene):
+  def __init__(self, model):
     self.pos = np.array([0.0, 0.0, 10.0])
     self.ref = np.array([0.0, 0.0, 0.0])
     self.up = np.array([0.0, 1.0, 0.0])
@@ -50,7 +50,7 @@ class Camera:
     self.aspect = 1.0
     self.near = 3.0
     self.far = 30.0
-    self.scene = scene
+    self.model = model
 
     self.pos_interp = None
     self.ref_interp = None
@@ -225,7 +225,7 @@ class Camera:
 
     return q
 
-  def _pick_point_on_scene(self, point):
+  def _pick_point_on_model(self, point):
     n_point = self._nearplane_point(point)
     v = n_point - self.pos
     l = np.sqrt(v.dot(v))
@@ -234,22 +234,21 @@ class Camera:
     min_distance2 = np.inf
     min_picked = None
 
-    for model in self.scene:
-      for face in model.faces:
-        triangle = [
-          np.array(model.vertices[face[0][0]]),
-          np.array(model.vertices[face[1][0]]),
-          np.array(model.vertices[face[2][0]]),
-        ]
-        picked = self._intersect_triangle_with_ray(triangle, v)
-        if picked is None:
-          continue
+    for face in self.model.faces:
+      triangle = [
+        np.array(self.model.vertices[face[0][0]]),
+        np.array(self.model.vertices[face[1][0]]),
+        np.array(self.model.vertices[face[2][0]]),
+      ]
+      picked = self._intersect_triangle_with_ray(triangle, v)
+      if picked is None:
+        continue
 
-        x = self.pos - picked
-        distance2 = x.dot(x)
-        if distance2 < min_distance2:
-          min_distance2 = distance2
-          min_picked = picked
+      x = self.pos - picked
+      distance2 = x.dot(x)
+      if distance2 < min_distance2:
+        min_distance2 = distance2
+        min_picked = picked
 
     return min_picked
 
@@ -257,7 +256,7 @@ class Camera:
     self.prev_pos = self.pos
     self.prev_ref = self.ref
 
-    picked = self._pick_point_on_scene(point)
+    picked = self._pick_point_on_model(point)
     if picked is None:
       return
 

@@ -7,7 +7,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
-scene = []
+model = None
 camera = None
 width, height = 600, 600
 
@@ -40,8 +40,7 @@ def display():
 
   camera.update()
   glMatrixMode(GL_MODELVIEW)
-  for model in scene:
-    model.render()
+  model.render()
 
   glutSwapBuffers()
   glutPostRedisplay()
@@ -74,17 +73,16 @@ def initializeSetting():
 def prepareModel():
   import wavefront
 
+  global model
   model = wavefront.Mesh()
   filename = os.path.join(sys.path[0], 'grandStaircaseDark.obj')
   model.load(filename)
-
-  scene.append(model)
 
 def prepareCamera():
   import camera
 
   global camera
-  camera = camera.Camera(scene)
+  camera = camera.Camera(model)
   camera.init()
 
 if __name__ == "__main__":

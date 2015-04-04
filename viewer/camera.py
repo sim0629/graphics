@@ -82,7 +82,7 @@ class Camera:
     self._look_at()
     self._perspective()
 
-  def doly(self, out):
+  def dolly(self, out):
     speed = -0.1
     if out:
       speed = -speed
@@ -269,9 +269,9 @@ class Camera:
       return
 
     if ch == 'w':
-      self.doly(IN)
+      self.dolly(IN)
     elif ch == 's':
-      self.doly(OUT)
+      self.dolly(OUT)
     elif ch == 'd':
       self.zoom(IN)
     elif ch == 'a':

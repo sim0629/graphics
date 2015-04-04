@@ -112,8 +112,11 @@ class Camera:
     v = np.cross(n, u)
     return n, u, v
 
+  def _tan_half_theta(self):
+    return np.tan(self.theta * 0.5 * np.pi / 180.0)
+
   def _get_nearplane_half_size(self):
-    height = np.tan(self.theta * 0.5 * np.pi / 180.0) * self.near
+    height = self._tan_half_theta() * self.near
     width = height * self.aspect
     return np.array([width, height])
 
@@ -265,6 +268,73 @@ class Camera:
     _, _, v = self._get_nuv()
     self.ref_up = Interpolation(self.up, v)
 
+  def _to_be_shown_point(self, p):
+    o = self.pos
+    n, u, v = self._get_nuv()
+
+    q = p - u.dot(p - o) * u
+    qo = q - o
+    h = np.abs(v.dot(qo))
+    d = np.abs(n.dot(qo))
+    dh = h / self._tan_half_theta() - d
+
+    q = p - v.dot(p - o) * v
+    qo = q - o
+    w = np.abs(u.dot(qo))
+    d = np.abs(n.dot(qo))
+    dw = w / self._tan_half_theta() - d
+
+    return max(dh, dw)
+
+  def show_all(self):
+    min_x, max_x = np.inf, -np.inf
+    min_y, max_y = np.inf, -np.inf
+    min_z, max_z = np.inf, -np.inf
+
+    for vertex in self.model.vertices:
+      x, y, z = vertex[X], vertex[Y], vertex[Z]
+      if x < min_x:
+        min_x = x
+      if x > max_x:
+        max_x = x
+      if y < min_y:
+        min_y = y
+      if y > max_y:
+        max_y = y
+      if z < min_z:
+        min_z = z
+      if z > max_z:
+        max_z = z
+
+    self.prev_pos = self.pos
+    self.prev_ref = np.array([
+      (min_x + max_x) * 0.5,
+      (min_y + max_y) * 0.5,
+      (min_z + max_z) * 0.5,
+    ])
+    n, u, v = self._get_nuv()
+    self.prev_up = self.up
+    self.up = v
+
+    max_d = -np.inf
+    for p in [
+      [min_x, min_y, min_z],
+      [min_x, min_y, max_z],
+      [min_x, max_y, min_z],
+      [min_x, max_y, max_z],
+      [max_x, min_y, min_z],
+      [max_x, min_y, max_z],
+      [max_x, max_y, min_z],
+      [max_x, max_y, max_z],
+    ]:
+      d = self._to_be_shown_point(np.array(p))
+      if d > max_d:
+        max_d = d
+
+    self.pos_interp = Interpolation(self.pos, self.pos + max_d * n)
+    self.ref_interp = Interpolation(self.ref, self.prev_ref)
+    self.up_interp = Interpolation(self.prev_up, v)
+
   def keyboard(self, ch, x, y):
     if self.is_animating():
       return
@@ -277,6 +347,8 @@ class Camera:
       self.zoom(IN)
     elif ch == 'a':
       self.zoom(OUT)
+    elif ch == ' ':
+      self.show_all()
     else:
       pass
 

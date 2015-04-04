@@ -21,6 +21,25 @@ def shift_pressed():
 def ctrl_pressed():
   return is_pressed(GLUT_ACTIVE_CTRL)
 
+class Interpolation:
+
+  def __init__(self, begin, end, count = 24):
+    self.begin = begin
+    self.end = end
+    self.count = int(count)
+    self.i = 0
+
+  def is_done(self):
+    return self.i >= self.count
+
+  def next(self):
+    self.i += 1
+    if self.is_done():
+      return self.end
+    v = self.end - self.begin
+    t = float(self.i) / self.count
+    return self.begin + t * v
+
 class Camera:
 
   def __init__(self, scene):
@@ -32,6 +51,15 @@ class Camera:
     self.near = 3.0
     self.far = 30.0
     self.scene = scene
+
+    self.pos_interp = None
+    self.ref_interp = None
+    self.up_interp = None
+
+  def is_animating(self):
+    return self.pos_interp is not None \
+      or self.ref_interp is not None \
+      or self.up_interp is not None
 
   def _look_at(self):
     glMatrixMode(GL_MODELVIEW)
@@ -233,13 +261,14 @@ class Camera:
     if picked is None:
       return
 
-    self.ref = picked
+    self.ref_interp = Interpolation(self.ref, picked)
     _, _, v = self._get_nuv()
-    self.up = v
-
-    self._look_at()
+    self.ref_up = Interpolation(self.up, v)
 
   def keyboard(self, ch, x, y):
+    if self.is_animating():
+      return
+
     if ch == 'w':
       self.doly(IN)
     elif ch == 's':
@@ -252,6 +281,9 @@ class Camera:
       pass
 
   def mouse(self, button, state, x, y):
+    if self.is_animating():
+      return
+
     if state == GLUT_DOWN:
       source = np.array([x, y])
       if ctrl_pressed():
@@ -268,6 +300,9 @@ class Camera:
       pass
 
   def motion(self, x, y):
+    if self.is_animating():
+      return
+
     target = np.array([x, y])
     if self.method == 'translate':
       self.translate(target)
@@ -275,4 +310,25 @@ class Camera:
       self.rotate(target)
     else:
       pass
+
+  def update(self):
+    if not self.is_animating():
+      return
+
+    if self.pos_interp is not None:
+      self.pos = self.pos_interp.next()
+      if self.pos_interp.is_done():
+        self.pos_interp = None
+
+    if self.ref_interp is not None:
+      self.ref = self.ref_interp.next()
+      if self.ref_interp.is_done():
+        self.ref_interp = None
+
+    if self.up_interp is not None:
+      self.up = self.up_interp.next()
+      if self.up_interp.is_done():
+        self.up_interp = None
+
+    self._look_at()
 

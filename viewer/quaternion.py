@@ -13,12 +13,12 @@ class Quaternion:
     w = np.sqrt(v0.dot(v0) * v1.dot(v1)) + v0.dot(v1)
     axis = np.cross(v0, v1)
     x, y, z = axis[0], axis[1], axis[2]
-    return Quaternion(w, x, y, z)
+    return cls(w, x, y, z)
 
   @classmethod
   def from_axis_and_angle(cls, axis, sin, cos):
     axis /= np.sqrt(axis.dot(axis))
-    return Quaternion(cos, axis[0] * sin, axis[1] * sin, axis[2] * sin)
+    return cls(cos, axis[0] * sin, axis[1] * sin, axis[2] * sin)
 
   def conjugate(self):
     return Quaternion(self.w, -self.x, -self.y, -self.z)

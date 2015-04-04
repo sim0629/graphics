@@ -23,7 +23,7 @@ def ctrl_pressed():
 
 class Camera:
 
-  def __init__(self):
+  def __init__(self, scene):
     self.pos = np.array([0.0, 0.0, 10.0])
     self.ref = np.array([0.0, 0.0, 0.0])
     self.up = np.array([0.0, 1.0, 0.0])
@@ -31,6 +31,7 @@ class Camera:
     self.aspect = 1.0
     self.near = 1.0
     self.far = 30.0
+    self.scene = scene
 
   def _look_at(self):
     glMatrixMode(GL_MODELVIEW)
@@ -170,6 +171,79 @@ class Camera:
     self._look_at()
     glutPostRedisplay()
 
+  def _intersect_triangle_with_ray(self, triangle, ray):
+    v0, v1, v2 = triangle
+    p = self.pos
+
+    x = v1 - v0
+    y = v2 - v0
+    n = np.cross(x, y)
+    l = np.sqrt(n.dot(n))
+    if l < 1e-8:
+      return None
+    n /= l
+
+    d = n.dot(v0 - p) / n.dot(ray)
+    if d < 0.0:
+      return None
+
+    q = p + d * ray
+    w = q - v0
+
+    m = x.dot(y) * x.dot(y) - x.dot(x) * y.dot(y)
+    if np.abs(m) < 1e-8:
+      return None
+
+    s = (x.dot(y) * w.dot(y) - y.dot(y) * w.dot(x)) / m
+    t = (x.dot(y) * w.dot(x) - x.dot(x) * w.dot(y)) / m
+    if s < 0.0 or t < 0.0 or s + t > 1.0:
+      return None
+
+    return q
+
+  def _pick_point_on_scene(self, point):
+    n_point = self._nearplane_point(point)
+    v = n_point - self.pos
+    l = np.sqrt(v.dot(v))
+    v /= l
+
+    min_distance2 = np.inf
+    min_picked = None
+
+    for model in self.scene:
+      for face in model.faces:
+        triangle = [
+          np.array(model.vertices[face[0][0]]),
+          np.array(model.vertices[face[1][0]]),
+          np.array(model.vertices[face[2][0]]),
+        ]
+        picked = self._intersect_triangle_with_ray(triangle, v)
+        if picked is None:
+          continue
+
+        x = self.pos - picked
+        distance2 = x.dot(x)
+        if distance2 < min_distance2:
+          min_distance2 = distance2
+          min_picked = picked
+
+    return min_picked
+
+  def pick(self, point):
+    self.prev_pos = self.pos
+    self.prev_ref = self.ref
+
+    picked = self._pick_point_on_scene(point)
+    if picked is None:
+      return
+
+    self.ref = picked
+    _, _, v = self._get_nuv()
+    self.up = v
+
+    self._look_at()
+    glutPostRedisplay()
+
   def keyboard(self, ch, x, y):
     if ch == 'w':
       self.doly(IN)
@@ -186,7 +260,7 @@ class Camera:
     if state == GLUT_DOWN:
       source = np.array([x, y])
       if ctrl_pressed():
-        pass
+        self.pick(source)
       elif shift_pressed():
         self.method = 'translate'
         self.translate_start(source)

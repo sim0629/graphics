@@ -82,7 +82,7 @@ def prepareCamera():
   import camera
 
   global camera
-  camera = camera.Camera()
+  camera = camera.Camera(scene)
   camera.init()
 
 if __name__ == "__main__":

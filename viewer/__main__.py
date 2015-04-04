@@ -69,14 +69,12 @@ def initializeSetting():
   glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
 
 def prepareModel():
-  sys.path.insert(0, os.path.join(sys.path[0], '..'))
-  import hierarchy.oryzae
-
-  pos = (0.0, 0.0, 0.0)
-  scale = (1.0, 1.0, 1.0)
+  import wavefront
 
   global model
-  model = hierarchy.oryzae.Oryzae(pos, scale)
+  model = wavefront.Mesh()
+  filename = os.path.join(sys.path[0], 'grandStaircaseDark.obj')
+  model.load(filename)
 
 def prepareCamera():
   import camera

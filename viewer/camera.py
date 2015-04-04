@@ -29,7 +29,7 @@ class Camera:
     self.up = np.array([0.0, 1.0, 0.0])
     self.theta = 60.0
     self.aspect = 1.0
-    self.near = 1.0
+    self.near = 3.0
     self.far = 30.0
     self.scene = scene
 

@@ -86,7 +86,7 @@ class Camera:
     return n, u, v
 
   def _get_nearplane_half_size(self):
-    height = np.arctan(self.theta / 2.0) * self.near
+    height = np.tan(self.theta * 0.5 * np.pi / 180.0) * self.near
     width = height * self.aspect
     return np.array([width, height])
 

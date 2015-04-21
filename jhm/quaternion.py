@@ -10,6 +10,13 @@ class Quaternion:
   def __init__(self, w, x, y, z):
     self.w, self.x, self.y, self.z = w, x, y, z
 
+  @classmethod
+  def from_list(cls, l):
+    return cls(l[0], l[1], l[2], l[3])
+
+  def to_list(self):
+    return [self.w, self.x, self.y, self.z]
+
   def __str__(self):
     w, x, y, z = self.w, self.x, self.y, self.z
     return "Quaternion (%f, %f, %f, %f)" % (w, x, y, z)

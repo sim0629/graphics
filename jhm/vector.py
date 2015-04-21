@@ -7,6 +7,13 @@ class Vector:
   def __init__(self, x, y, z):
     self.x, self.y, self.z = x, y, z
 
+  @classmethod
+  def from_list(cls, l):
+    return cls(l[0], l[1], l[2])
+
+  def to_list(self):
+    return [self.x, self.y, self.z]
+
   def __str__(self):
     x, y, z = self.x, self.y, self.z
     return "Vector (%f, %f, %f)" % (x, y, z)

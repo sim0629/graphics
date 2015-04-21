@@ -167,15 +167,15 @@ class Camera:
       sin = r / len_l
       s = np.sqrt(ll - rr)
       cos = s / len_l
-      q = qt.Quaternion.from_axis_and_angle(axis, sin, cos)
-      p = self.prev_pos + s * q.rotate(unit_l)
+      q = qt.from_axis_and_angle(axis, sin, cos)
+      p = self.prev_pos + s * qt.rotate(q, unit_l)
     else: # intersects
       sin = d / len_l
       cos = t / len_l
-      q = qt.Quaternion.from_axis_and_angle(axis, sin, cos)
+      q = qt.from_axis_and_angle(axis, sin, cos)
       dt = np.sqrt(rr - dd)
       t -= dt
-      p = self.prev_pos + t * q.rotate(unit_l)
+      p = self.prev_pos + t * qt.rotate(q, unit_l)
 
     return p
 
@@ -189,12 +189,11 @@ class Camera:
     s = self.t_source - self.prev_ref
     e = self._trackball_point(target) - self.prev_ref
 
-    q = qt.Quaternion.from_two_vectors(s, e)
-    q = q.conjugate()
+    q = ~qt.from_two_vectors(s, e)
 
     v = self.prev_pos - self.prev_ref
-    self.pos = self.prev_ref + q.rotate(v)
-    self.up = q.rotate(self.prev_up)
+    self.pos = self.prev_ref + qt.rotate(q, v)
+    self.up = qt.rotate(q, self.prev_up)
 
     self._look_at()
 

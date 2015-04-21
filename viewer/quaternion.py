@@ -1,40 +1,27 @@
 # coding: utf-8
 
 import numpy as np
+import os
+import sys
 
-class Quaternion:
+sys.path.insert(0, os.path.join(sys.path[0], '..'))
 
-  def __init__(self, w, x, y, z):
-    mag = np.sqrt(w * w + x * x + y * y + z * z)
-    self.w, self.x, self.y, self.z = w / mag, x / mag, y / mag, z / mag
+from jhm.quaternion import Quaternion
+from jhm.vector import Vector
 
-  @classmethod
-  def from_two_vectors(cls, v0, v1):
-    w = np.sqrt(v0.dot(v0) * v1.dot(v1)) + v0.dot(v1)
-    axis = np.cross(v0, v1)
-    x, y, z = axis[0], axis[1], axis[2]
-    return cls(w, x, y, z)
+def from_two_vectors(v0, v1):
+  v0 = Vector.from_list(v0).normalize()
+  v1 = Vector.from_list(v1).normalize()
+  c = v0.dot(v1)
+  a = v0 * v1
+  s = a.length()
+  q = Quaternion(c, s * a.x, s * a.y, s * a.z)
+  return Quaternion.exp(Quaternion.ln(q).div(2.0))
 
-  @classmethod
-  def from_axis_and_angle(cls, axis, sin, cos):
-    axis /= np.sqrt(axis.dot(axis))
-    return cls(cos, axis[0] * sin, axis[1] * sin, axis[2] * sin)
+def from_axis_and_angle(a, s, c):
+  a = Vector.from_list(a).normalize()
+  return Quaternion(c, s * a.x, s * a.y, s * a.z)
 
-  def conjugate(self):
-    return Quaternion(self.w, -self.x, -self.y, -self.z)
-
-  def __mul__(self, other):
-    w, x, y, z = self.w, self.x, self.y, self.z
-    return Quaternion(
-      w * other.w - x * other.x - y * other.y - z * other.z,
-      w * other.x + x * other.w + y * other.z - z * other.y,
-      w * other.y + y * other.w + z * other.x - x * other.z,
-      w * other.z + z * other.w + x * other.y - y * other.x)
-
-  def rotate(self, v):
-    l = np.sqrt(v.dot(v))
-    v /= l
-    qv = Quaternion(0.0, v[0], v[1], v[2])
-    q =  self * qv * self.conjugate()
-    return l * np.array([q.x, q.y, q.z])
+def rotate(q, v):
+  return np.array(Quaternion.rotate(q, Vector.from_list(v)).to_list())
 

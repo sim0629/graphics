@@ -5,9 +5,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
-
 from jhm.quaternion import Quaternion
 from jhm.vector import Vector
+sys.path.pop()
 
 def from_two_vectors(v0, v1):
   v0 = Vector.from_list(v0).normalize()

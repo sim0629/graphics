@@ -78,7 +78,7 @@ class Camera:
       self.near, self.far
     )
 
-  def init(self):
+  def see(self):
     self._look_at()
     self._perspective()
 

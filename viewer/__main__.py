@@ -87,7 +87,7 @@ def prepareCamera():
 
   global camera
   camera = camera.Camera(model)
-  camera.init()
+  camera.see()
 
 if __name__ == "__main__":
   initializeWindow()

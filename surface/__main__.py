@@ -7,6 +7,8 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+from data import *
+
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
 from viewer.wavefront import Mesh
@@ -15,6 +17,7 @@ sys.path.pop()
 MODE_VIEW, MODE_EDIT = range(2)
 mode = None
 
+data = None
 model = Mesh()
 camera = Camera(model)
 width, height = 600, 600
@@ -97,7 +100,32 @@ def changeToViewMode():
   global mode
   mode = MODE_VIEW
 
+def parseArguments():
+  argc = len(sys.argv)
+  if argc < 2:
+    raise Exception('No command line argument')
+  filename = sys.argv[1]
+  if filename == 'sample':
+    if argc < 5:
+      raise Exception('Few arguments to generate data')
+    t = sys.argv[2].upper()
+    if t == 'BSPLINE':
+      t = BSPLINE
+    elif t == 'CATMULL_ROM':
+      t = CATMULL_ROM
+    elif t == 'NATURAL':
+      t = NATURAL
+    else:
+      raise Exception('Unknown curve type: %s' % t)
+    n = int(sys.argv[3])
+    m = int(sys.argv[4])
+    Data.sample(t, n, m)
+    sys.exit(0)
+  global data
+  data = Data(filename)
+
 if __name__ == '__main__':
+  parseArguments()
   initializeWindow()
   changeToViewMode()
   glutMainLoop()

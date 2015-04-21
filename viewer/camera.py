@@ -290,6 +290,9 @@ class Camera:
     min_y, max_y = np.inf, -np.inf
     min_z, max_z = np.inf, -np.inf
 
+    if len(self.model.vertices) == 0:
+      return
+
     for vertex in self.model.vertices:
       x, y, z = vertex[X], vertex[Y], vertex[Z]
       if x < min_x:

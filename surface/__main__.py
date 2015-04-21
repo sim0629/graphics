@@ -7,7 +7,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
-from data import *
+from data import Data
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
@@ -109,14 +109,6 @@ def parseArguments():
     if argc < 5:
       raise Exception('Few arguments to generate data')
     t = sys.argv[2].upper()
-    if t == 'BSPLINE':
-      t = BSPLINE
-    elif t == 'CATMULL_ROM':
-      t = CATMULL_ROM
-    elif t == 'NATURAL':
-      t = NATURAL
-    else:
-      raise Exception('Unknown curve type: %s' % t)
     n = int(sys.argv[3])
     m = int(sys.argv[4])
     Data.sample(t, n, m)

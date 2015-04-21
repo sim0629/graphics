@@ -79,9 +79,8 @@ def prepareModel():
   import wavefront
 
   global model
-  model = wavefront.Mesh()
   filename = os.path.join(sys.path[0], 'grandStaircaseDark.obj')
-  model.load(filename)
+  model = wavefront.Mesh.load_from_file(filename)
 
 def prepareCamera():
   import camera

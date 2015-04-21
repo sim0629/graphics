@@ -10,39 +10,6 @@ class Mesh:
     self.normals = []
     self.faces = []
 
-  def load(self, filename):
-    file = open(filename, 'r')
-
-    for l in file:
-      a = l.split()
-      if len(a) == 0:
-        continue
-      if a[0] == 'v':
-        v = map(float, a[1:])
-        self.vertices.append(v)
-      elif a[0] == 'vt':
-        vt = map(float, a[1:])
-        self.textures.append(vt)
-      elif a[0] == 'vn':
-        vn = map(float, a[1:])
-        self.normals.append(vn)
-      elif a[0] == 'f':
-        f = []
-        if len(a) < 4:
-          continue
-        for ai in a[1:]:
-          fi = [None, None, None]
-          b = ai.split('/')
-          for j in xrange(len(b)):
-            bj = b[j]
-            if len(bj) == 0:
-              continue
-            fi[j] = int(b[j]) - 1
-          f.append(fi)
-        self.faces.append(f)
-
-    file.close()
-
   def render(self):
     glBegin(GL_TRIANGLES)
 
@@ -57,4 +24,40 @@ class Mesh:
         glVertex(v[0], v[1], v[2])
 
     glEnd()
+
+  @classmethod
+  def load_from_file(cls, filename):
+    mesh = cls()
+    file = open(filename, 'r')
+
+    for l in file:
+      a = l.split()
+      if len(a) == 0:
+        continue
+      if a[0] == 'v':
+        v = map(float, a[1:])
+        mesh.vertices.append(v)
+      elif a[0] == 'vt':
+        vt = map(float, a[1:])
+        mesh.textures.append(vt)
+      elif a[0] == 'vn':
+        vn = map(float, a[1:])
+        mesh.normals.append(vn)
+      elif a[0] == 'f':
+        f = []
+        if len(a) < 4:
+          continue
+        for ai in a[1:]:
+          fi = [None, None, None]
+          b = ai.split('/')
+          for j in xrange(len(b)):
+            bj = b[j]
+            if len(bj) == 0:
+              continue
+            fi[j] = int(b[j]) - 1
+          f.append(fi)
+        mesh.faces.append(f)
+
+    file.close()
+    return mesh
 

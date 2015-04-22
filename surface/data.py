@@ -7,6 +7,7 @@ CURVE_TYPE = ['BSPLINE', 'CATMULL_ROM', 'NATURAL']
 class Data:
 
   def __init__(self, filename):
+    self.filename = filename
     f = open(filename)
     t = f.readline().strip().upper()
     if t not in CURVE_TYPE:

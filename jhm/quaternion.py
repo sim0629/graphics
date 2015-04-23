@@ -127,7 +127,7 @@ class Quaternion:
         theta = math.acos(c)
         sinom = math.sin(theta)
         return (a.mul(math.sin((1 - t) * theta)) +
-                b.mul(math.sin(t * theta))) / sinom
+                b.mul(math.sin(t * theta))).div(sinom)
       else:
         return (a.mul(1 - t) + b.mul(t)).normalize()
     else:

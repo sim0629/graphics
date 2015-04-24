@@ -28,6 +28,18 @@ class Data:
         rotations.append(map(float, f.readline().split()))
         positions.append(map(float, f.readline().split()))
 
+  def save(self):
+    with open(self.filename, 'w') as f:
+      f.write('%s\n' % self.t)
+      f.write('%d\n' % self.n)
+      f.write('%d\n' % self.m)
+      for i in xrange(self.n):
+        for j in xrange(self.m):
+          f.write('%f %f\n' % tuple(self.points[i][j]))
+        f.write('%f\n' % self.scales[i])
+        f.write('%f %f %f %f\n' % tuple(self.rotations[i]))
+        f.write('%f %f %f\n' % tuple(self.positions[i]))
+
   @staticmethod
   def sample(t, n, m):
     if t not in CURVE_TYPE:

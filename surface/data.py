@@ -8,26 +8,25 @@ class Data:
 
   def __init__(self, filename):
     self.filename = filename
-    f = open(filename)
-    t = f.readline().strip().upper()
-    if t not in CURVE_TYPE:
-      raise Exception('Unknown curve type: %s' % t)
-    self.t = t
-    self.n = n = int(f.readline())
-    self.m = m = int(f.readline())
-    self.points = points = []
-    self.scales = scales = []
-    self.rotations = rotations = []
-    self.positions = positions = []
-    for i in xrange(n):
-      cross = []
-      for j in xrange(m):
-        cross.append(map(float, f.readline().split()))
-      points.append(cross)
-      scales.append(float(f.readline()))
-      rotations.append(map(float, f.readline().split()))
-      positions.append(map(float, f.readline().split()))
-    f.close()
+    with open(filename, 'r') as f:
+      t = f.readline().strip().upper()
+      if t not in CURVE_TYPE:
+        raise Exception('Unknown curve type: %s' % t)
+      self.t = t
+      self.n = n = int(f.readline())
+      self.m = m = int(f.readline())
+      self.points = points = []
+      self.scales = scales = []
+      self.rotations = rotations = []
+      self.positions = positions = []
+      for i in xrange(n):
+        cross = []
+        for j in xrange(m):
+          cross.append(map(float, f.readline().split()))
+        points.append(cross)
+        scales.append(float(f.readline()))
+        rotations.append(map(float, f.readline().split()))
+        positions.append(map(float, f.readline().split()))
 
   @staticmethod
   def sample(t, n, m):

@@ -8,6 +8,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 from data import Data
+import swept
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
@@ -96,6 +97,7 @@ def settingForViewMode():
 
 def changeToViewMode():
   settingForViewMode()
+  swept.generate_surface(model, data)
   camera.see()
   global mode
   mode = MODE_VIEW

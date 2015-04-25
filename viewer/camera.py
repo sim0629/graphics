@@ -50,6 +50,7 @@ class Camera:
     self.aspect = 1.0
     self.near = 3.0
     self.far = 30.0
+    self.radius = 7.0 # of virtual trackball
     self.model = model
 
     self.pos_interp = None
@@ -156,7 +157,7 @@ class Camera:
     dd = ll - t * t
     d = np.sqrt(dd)
 
-    r = np.sqrt(l.dot(l)) - self.near
+    r = min(self.radius, np.sqrt(l.dot(l)) - self.near)
     rr = r * r
 
     len_l = np.sqrt(ll)

@@ -103,4 +103,5 @@ def start():
   glPolygonMode(GL_BACK, GL_LINE)
 
   camera.see()
+  refresh_title()
 

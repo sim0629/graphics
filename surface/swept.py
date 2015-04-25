@@ -133,6 +133,13 @@ def spline_each_crosses(t, n, m, points, steps):
       spline = natural_closed(m, cross, steps)
     yield np.array(list(spline))
 
+def interpolate_crosses(n, crosses, steps):
+  assert n > 1 and n == len(crosses)
+  return np.swapaxes(np.array(
+      [list(interpolate_vectors(n, points, steps))
+       for points in np.swapaxes(crosses, 0, 1)]),
+    0, 1)
+
 def generate_surface(model, data, steps = 10):
   # transformation factors
   scales = interpolate_vectors(data.n, data.scales, steps)
@@ -140,4 +147,5 @@ def generate_surface(model, data, steps = 10):
   positions = interpolate_vectors(data.n, np.array(data.positions), steps)
   # cross sections
   crosses = spline_each_crosses(data.t, data.n, data.m, np.array(data.points), steps)
+  points = interpolate_crosses(data.n, np.array(list(crosses)), steps)
 

@@ -5,6 +5,9 @@ from OpenGL.GL import *
 class Mesh:
 
   def __init__(self):
+    self.clear()
+
+  def clear(self):
     self.vertices = []
     self.textures = []
     self.normals = []

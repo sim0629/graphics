@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from jhm.vector import Vector
 from jhm.quaternion import Quaternion
+import viewer.quaternion as qt
 sys.path.pop()
 
 import data
@@ -140,6 +141,42 @@ def interpolate_crosses(n, crosses, steps):
        for points in np.swapaxes(crosses, 0, 1)]),
     0, 1)
 
+def construct_mesh(model, points, scales, rotations, positions):
+  model.clear()
+  n, m, _ = points.shape
+  for pp in points:
+    scale = next(scales)
+    rotation = next(rotations)
+    position = next(positions)
+    for p in pp:
+      vertex = qt.rotate(rotation,
+        [p[0] * scale, 0.0, p[1] * scale]
+      ) + position
+      model.vertices.append(list(vertex))
+  for i in xrange(1, n):
+    for j in xrange(m):
+      # 1   3
+      #   \
+      # 0   2
+      k0 = (i - 1) * m + (j - 1) % m
+      k1 = (i - 1) * m + j
+      k2 = i * m + (j - 1) % m
+      k3 = i * m + j
+      v0 = np.array(model.vertices[k0])
+      v1 = np.array(model.vertices[k1])
+      v2 = np.array(model.vertices[k2])
+      v3 = np.array(model.vertices[k3])
+      n0 = np.cross(v2 - v0, v1 - v0); n0 /= np.sqrt(n0.dot(n0))
+      n1 = np.cross(v1 - v3, v2 - v3); n1 /= np.sqrt(n1.dot(n1))
+      model.normals.append(list(n0))
+      model.normals.append(list(n1))
+      model.faces.append([[k0, None, k1 * 2],
+                          [k2, None, k1 * 2],
+                          [k1, None, k1 * 2]])
+      model.faces.append([[k3, None, k1 * 2 + 1],
+                          [k1, None, k1 * 2 + 1],
+                          [k2, None, k1 * 2 + 1]])
+
 def generate_surface(model, data, steps = 10):
   # transformation factors
   scales = interpolate_vectors(data.n, data.scales, steps)
@@ -148,4 +185,6 @@ def generate_surface(model, data, steps = 10):
   # cross sections
   crosses = spline_each_crosses(data.t, data.n, data.m, np.array(data.points), steps)
   points = interpolate_crosses(data.n, np.array(list(crosses)), steps)
+  # mesh
+  construct_mesh(model, points, scales, rotations, positions)
 

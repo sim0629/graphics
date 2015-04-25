@@ -1,5 +1,7 @@
 # coding: utf-8 
 
+import numpy as np
+
 from OpenGL.GL import *
 
 class Mesh:
@@ -27,6 +29,34 @@ class Mesh:
         glVertex(v[0], v[1], v[2])
 
     glEnd()
+
+  def bounding_box(self):
+    min_x, max_x = np.inf, -np.inf
+    min_y, max_y = np.inf, -np.inf
+    min_z, max_z = np.inf, -np.inf
+
+    if len(self.vertices) == 0:
+      return None
+
+    for vertex in self.vertices:
+      x, y, z = vertex[0], vertex[1], vertex[2]
+      if x < min_x:
+        min_x = x
+      if x > max_x:
+        max_x = x
+      if y < min_y:
+        min_y = y
+      if y > max_y:
+        max_y = y
+      if z < min_z:
+        min_z = z
+      if z > max_z:
+        max_z = z
+
+    return np.array([
+      [min_x, min_y, min_z],
+      [max_x, max_y, max_z],
+    ])
 
   @classmethod
   def load_from_file(cls, filename):

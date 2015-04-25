@@ -286,27 +286,11 @@ class Camera:
     return max(dh, dw)
 
   def show_all(self):
-    min_x, max_x = np.inf, -np.inf
-    min_y, max_y = np.inf, -np.inf
-    min_z, max_z = np.inf, -np.inf
-
-    if len(self.model.vertices) == 0:
+    box = self.model.bounding_box()
+    if box is None:
       return
-
-    for vertex in self.model.vertices:
-      x, y, z = vertex[X], vertex[Y], vertex[Z]
-      if x < min_x:
-        min_x = x
-      if x > max_x:
-        max_x = x
-      if y < min_y:
-        min_y = y
-      if y > max_y:
-        max_y = y
-      if z < min_z:
-        min_z = z
-      if z > max_z:
-        max_z = z
+    min_x, min_y, min_z = box[0]
+    max_x, max_y, max_z = box[1]
 
     self.prev_pos = self.pos
     self.prev_ref = np.array([

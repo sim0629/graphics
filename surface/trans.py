@@ -8,6 +8,7 @@ from OpenGL.GL import *
 
 import title
 
+SCALING, TRANSLATING, ROTATING = range(3)
 camera = None
 data = None
 
@@ -41,21 +42,24 @@ def keyboard(ch, x, y):
     camera.keyboard(ch, x, y)
 
 def mouse(button, state, x, y):
-  drag.alt = alt_pressed()
-  if drag.alt:
-    camera.mouse(button, state, x, y)
-    return
   if state == GLUT_DOWN:
+    drag.alt = alt_pressed()
+    if drag.alt:
+      camera.mouse(button, state, x, y)
+      return
     drag.begin(np.array([x, y]))
     pick_point()
   elif state == GLUT_UP:
+    if drag.alt:
+      camera.mouse(button, state, x, y)
+      return
     drag.end()
 
 def motion(x, y):
-  if not drag.ing:
-    return
   if drag.alt:
     camera.motion(x, y)
+    return
+  if not drag.ing:
     return
   drag.move(np.array([x, y]))
   move_point()
@@ -81,17 +85,55 @@ def display():
     for p in data.points[i]:
       glVertex(p[0], 0.0, p[1])
     glEnd()
-    glColor(0.5, 0.5, 1.0)
-    glBegin(GL_POINTS)
-    glVertex(0.0, 0.0, 0.0)
-    glEnd()
+    if not drag.ing or i != drag.picked_i:
+      glColor(0.5, 0.5, 1.0)
+      glBegin(GL_POINTS)
+      glVertex(0.0, 0.0, 0.0)
+      glEnd()
     glPopMatrix()
 
 def pick_point():
-  pass
+  if ctrl_pressed():
+    drag.method = SCALING
+  elif shift_pressed():
+    drag.method = TRANSLATING
+  else:
+    drag.method = ROTATING
+
+  drag.picked_i = None
+
+  closest = np.inf
+  n_point = camera._nearplane_point(drag.source, False)
+  v = n_point - camera.pos
+  v /= np.sqrt(v.dot(v))
+  for i in xrange(len(data.positions)):
+    l = np.array(data.positions[i]) - camera.pos
+    ll = l.dot(l)
+    t = l.dot(v)
+    dd = ll - t * t
+    if dd < closest:
+      closest = dd
+      drag.picked_i = i
+
+  if drag.method == SCALING:
+    drag.picked_scale = data.scales[drag.picked_i]
+  elif drag.method == TRANSLATING:
+    drag.picked_position = data.positions[drag.picked_i]
+  else: # drag.method == ROTATING
+    drag.picked_rotation = data.rotations[drag.picked_i]
 
 def move_point():
-  pass
+  if drag.picked_i is None:
+    return
+
+  if drag.method == SCALING:
+    diff = drag.target[1] - drag.source[1]
+    mag = 10.0 ** diff
+    data.scales[drag.picked_i] = drag.picked_scale * mag
+  elif drag.method == TRANSLATING:
+    pass
+  else: # drag.method == ROTATING
+    pass
 
 def refresh_title():
   title.change('Transforming')

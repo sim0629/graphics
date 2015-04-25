@@ -106,8 +106,11 @@ class Camera:
     self.theta += speed
     self._perspective()
 
-  def _get_nuv(self):
-    n = self.prev_pos - self.prev_ref
+  def _get_nuv(self, prev = True):
+    if prev:
+      n = self.prev_pos - self.prev_ref
+    else:
+      n = self.pos - self.ref
     n /= np.sqrt(n.dot(n))
     u = np.cross(self.up, n) / np.sqrt(self.up.dot(self.up))
     v = np.cross(n, u)
@@ -121,11 +124,14 @@ class Camera:
     width = height * self.aspect
     return np.array([width, height])
 
-  def _nearplane_point(self, point):
+  def _nearplane_point(self, point, prev = True):
     size = self._get_nearplane_half_size()
     point *= size
-    n, u, v = self._get_nuv()
-    o = self.prev_pos - self.near * n
+    n, u, v = self._get_nuv(prev)
+    if prev:
+      o = self.prev_pos - self.near * n
+    else:
+      o = self.pos - self.near * n
     du = point[X] * u
     dv = point[Y] * v
     return o + du + dv
@@ -154,9 +160,7 @@ class Camera:
     ll = l.dot(l)
 
     t = l.dot(v)
-    dd = ll - t * t
-    if dd < 0:
-      dd = 0
+    dd = max(0.0, ll - t * t)
     d = np.sqrt(dd)
 
     r = min(self.radius, np.sqrt(l.dot(l)) - self.near)

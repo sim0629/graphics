@@ -27,6 +27,19 @@ class Data:
         scales.append(float(f.readline()))
         rotations.append(map(float, f.readline().split()))
         positions.append(map(float, f.readline().split()))
+    self.normalize()
+
+  def normalize(self):
+    assert self.n == len(self.points)
+    for i in xrange(self.n):
+      size = 0.0
+      for j in xrange(self.m):
+        size = max(size, max(map(abs, self.points[i][j])))
+      size *= 1.1 # padding
+      for j in xrange(self.m):
+        self.points[i][j][0] /= size
+        self.points[i][j][1] /= size
+      self.scales[i] *= size
 
   def save(self):
     with open(self.filename, 'w') as f:

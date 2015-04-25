@@ -6,6 +6,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 import swept
+import title
 
 data = None
 idx = 0
@@ -15,8 +16,10 @@ def keyboard(ch, x, y):
   global idx, steps
   if ch == ']':
     idx = (idx + 1) % data.n
+    refresh_title()
   elif ch == '[':
     idx = (idx - 1) % data.n
+    refresh_title()
   elif ch == '+':
     steps = steps + 1
   elif ch == '-':
@@ -51,6 +54,9 @@ def display():
     glVertex(p[0], 0.0, p[1])
   glEnd()
 
+def refresh_title():
+  title.change('Cross Section #%d' % idx)
+
 def start():
   glDisable(GL_LIGHTING)
   glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -65,4 +71,6 @@ def start():
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
   gluOrtho2D(-1.0, 1.0, -1.0, 1.0)
+
+  refresh_title()
 

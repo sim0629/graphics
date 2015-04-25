@@ -10,6 +10,7 @@ from OpenGL.GL import *
 import cross
 from data import Data
 import swept
+import title
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
@@ -129,7 +130,7 @@ def initializeWindow():
   glutInitWindowPosition(100, 100)
   glutInitWindowSize(width, height)
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-  glutCreateWindow('Swept Surface Designer by Gyumin Sim')
+  glutCreateWindow(title.suffix)
 
   glutReshapeFunc(reshape)
   glutDisplayFunc(display)
@@ -160,6 +161,7 @@ def changeToViewMode():
     return
   updateSurface()
   camera.see()
+  title.change('Viewing')
   mode = MODE_VIEW
 
 def changeToCrossMode():

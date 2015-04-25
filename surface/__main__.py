@@ -20,6 +20,7 @@ mode = None
 
 data = None
 model = Mesh()
+steps = 5
 camera = Camera(model)
 width, height = 600, 600
 
@@ -32,9 +33,16 @@ def normalizeMouse(x, y):
   x, y = x / float(width), (height - y) / float(height)
   return 2.0 * x - 1.0, 2.0 * y - 1.0
 
+def changeSteps(d):
+  global steps
+  steps = max(1, steps + d)
+  swept.generate_surface(model, data, steps)
+
 def keyboard(ch, x, y):
   if ch == chr(27): # esc
     sys.exit(0)
+  elif ch == '+' or ch == '-':
+    changeSteps(1 if ch == '+' else -1)
   if mode == MODE_VIEW:
     x, y = normalizeMouse(x, y)
     camera.keyboard(ch, x, y)
@@ -96,7 +104,7 @@ def settingForViewMode():
 
 def changeToViewMode():
   settingForViewMode()
-  swept.generate_surface(model, data)
+  swept.generate_surface(model, data, steps)
   camera.adjust_to_model()
   camera.see()
   global mode

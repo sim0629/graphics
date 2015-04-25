@@ -79,6 +79,8 @@ def keyboard(ch, x, y):
     camera.keyboard(ch, x, y)
   elif mode == MODE_CROSS:
     cross.keyboard(ch, x, y)
+  elif mode == MODE_TRANS:
+    trans.keyboard(ch, x, y)
 
 def mouse(button, state, x, y):
   x, y = normalizeMouse(x, y)

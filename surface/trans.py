@@ -11,6 +11,19 @@ import title
 camera = None
 data = None
 
+def is_pressed(flag):
+  m = glutGetModifiers()
+  return bool(m & flag)
+
+def shift_pressed():
+  return is_pressed(GLUT_ACTIVE_SHIFT)
+
+def ctrl_pressed():
+  return is_pressed(GLUT_ACTIVE_CTRL)
+
+def alt_pressed():
+  return is_pressed(GLUT_ACTIVE_ALT)
+
 class Drag:
   def __init__(self):
     self.ing = False
@@ -23,22 +36,29 @@ class Drag:
     self.ing = False
 drag = Drag()
 
+def keyboard(ch, x, y):
+  if alt_pressed():
+    camera.keyboard(ch, x, y)
+
 def mouse(button, state, x, y):
+  drag.alt = alt_pressed()
+  if drag.alt:
+    camera.mouse(button, state, x, y)
+    return
   if state == GLUT_DOWN:
     drag.begin(np.array([x, y]))
-    if pick_point():
-      return
+    pick_point()
   elif state == GLUT_UP:
     drag.end()
-  camera.mouse(button, state, x, y)
 
 def motion(x, y):
   if not drag.ing:
     return
-  drag.move(np.array([x, y]))
-  if move_point():
+  if drag.alt:
+    camera.motion(x, y)
     return
-  camera.motion(x, y)
+  drag.move(np.array([x, y]))
+  move_point()
 
 def display():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -68,10 +88,10 @@ def display():
     glPopMatrix()
 
 def pick_point():
-  return True
+  pass
 
 def move_point():
-  return True
+  pass
 
 def refresh_title():
   title.change('Transforming')

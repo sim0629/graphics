@@ -64,9 +64,9 @@ def start():
 
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
-  gluLookAt( 0.0,  0.0,  0.0,
-             0.0, -1.0,  0.0,
-             0.0,  0.0,  1.0 )
+  gluLookAt(0.0, 0.0, 0.0,
+            0.0, 1.0, 0.0,
+            0.0, 0.0, 1.0)
 
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()

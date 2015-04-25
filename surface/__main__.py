@@ -97,6 +97,7 @@ def settingForViewMode():
 def changeToViewMode():
   settingForViewMode()
   swept.generate_surface(model, data)
+  camera.adjust_to_model()
   camera.see()
   global mode
   mode = MODE_VIEW

@@ -78,8 +78,11 @@ def initializeSetting():
 def prepareModel():
   import wavefront
 
+  if len(sys.argv) < 2:
+    raise Exception('No model(.obj) file specified')
+
   global model
-  filename = os.path.join(sys.path[0], 'grandStaircaseDark.obj')
+  filename = sys.argv[1]
   model = wavefront.Mesh.load_from_file(filename)
 
 def prepareCamera():

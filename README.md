@@ -17,4 +17,4 @@ Hierarchy
 Viewer
 ------
 * Assignment #2
-* Run `python viewer`
+* Run `python viewer viewer/grandStaircaseDark.obj`

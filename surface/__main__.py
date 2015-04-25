@@ -40,6 +40,15 @@ def changeSteps(d):
   steps = max(1, steps + d)
   swept.generate_surface(model, data, steps)
 
+def changeType(t):
+  global data
+  if data.t == t:
+    return
+  data.t = t
+  if mode == MODE_VIEW:
+    updateSurface()
+    camera.see()
+
 def keyboard(ch, x, y):
   if ch == chr(27): # esc
     sys.exit(0)
@@ -52,6 +61,14 @@ def keyboard(ch, x, y):
     changeToViewMode()
   elif ch == 'e':
     changeToCrossMode()
+  elif ch in ['b', 'c', 'n']:
+    if ch == 'b':
+      t = 'BSPLINE'
+    elif ch == 'c':
+      t = 'CATMULL_ROM'
+    else: # ch == 'n'
+      t = 'NATURAL'
+    changeType(t)
   x, y = normalizeMouse(x, y)
   if mode == MODE_VIEW:
     camera.keyboard(ch, x, y)
@@ -133,12 +150,15 @@ def initializeSetting():
   glLineWidth(2.0)
   glPointSize(10.0)
 
+def updateSurface():
+  swept.generate_surface(model, data, steps)
+  camera.adjust_to_model()
+
 def changeToViewMode():
   global mode
   if mode == MODE_VIEW:
     return
-  swept.generate_surface(model, data, steps)
-  camera.adjust_to_model()
+  updateSurface()
   camera.see()
   mode = MODE_VIEW
 

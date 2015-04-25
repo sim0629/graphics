@@ -59,12 +59,20 @@ def display():
   glMatrixMode(GL_MODELVIEW)
 
   ring = data.points[idx]
+  n = len(ring)
   glBegin(GL_POINTS)
-  for p in ring:
+  for i in xrange(n):
+    if i == 0:
+      glColor(0.5, 1.0, 0.5)
+    elif i == n - 1:
+      glColor(1.0, 0.5, 0.5)
+    else:
+      glColor(1.0, 1.0, 1.0)
+    p = ring[i]
     glVertex(p[0], 0.0, p[1])
   glEnd()
 
-  n = len(ring)
+  glColor(1.0, 1.0, 1.0)
   if data.t == 'BSPLINE':
     spline = swept.bspline_closed(n, np.array(ring), steps)
   elif data.t == 'CATMULL_ROM':
@@ -100,7 +108,6 @@ def refresh_title():
 def start():
   glDisable(GL_LIGHTING)
   glClearColor(0.0, 0.0, 0.0, 0.0)
-  glColor(1.0, 1.0, 1.0)
 
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()

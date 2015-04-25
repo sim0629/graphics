@@ -21,6 +21,7 @@ mode = None
 data = None
 model = Mesh()
 steps = 5
+wire = True
 camera = Camera(model)
 width, height = 600, 600
 
@@ -43,6 +44,9 @@ def keyboard(ch, x, y):
     sys.exit(0)
   elif ch == '+' or ch == '-':
     changeSteps(1 if ch == '+' else -1)
+  elif ch == 'p':
+    global wire
+    wire = not wire
   if mode == MODE_VIEW:
     x, y = normalizeMouse(x, y)
     camera.keyboard(ch, x, y)
@@ -72,6 +76,9 @@ def displayView():
   glColor(1.0, 1.0, 1.0)
   glEnable(GL_LIGHTING)
   model.render()
+
+  if not wire:
+    return
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
   glColor(0.5, 1.0, 0.5)

@@ -90,6 +90,7 @@ def prepareCamera():
 
   global camera
   camera = camera.Camera(model)
+  camera.adjust_to_model()
   camera.see()
 
 if __name__ == "__main__":

@@ -155,6 +155,8 @@ class Camera:
 
     t = l.dot(v)
     dd = ll - t * t
+    if dd < 0:
+      dd = 0
     d = np.sqrt(dd)
 
     r = min(self.radius, np.sqrt(l.dot(l)) - self.near)
@@ -168,12 +170,12 @@ class Camera:
       sin = r / len_l
       s = np.sqrt(ll - rr)
       cos = s / len_l
-      q = qt.from_axis_and_angle(axis, sin, cos)
+      q = qt.from_axis_and_angle(axis, cos, sin)
       p = self.prev_pos + s * qt.rotate(q, unit_l)
     else: # intersects
       sin = d / len_l
       cos = t / len_l
-      q = qt.from_axis_and_angle(axis, sin, cos)
+      q = qt.from_axis_and_angle(axis, cos, sin)
       dt = np.sqrt(rr - dd)
       t -= dt
       p = self.prev_pos + t * qt.rotate(q, unit_l)
@@ -321,6 +323,15 @@ class Camera:
     self.pos_interp = Interpolation(self.pos, self.pos + max_d * n)
     self.ref_interp = Interpolation(self.ref, self.prev_ref)
     self.up_interp = Interpolation(self.prev_up, v)
+
+  def adjust_to_model(self):
+    box = self.model.bounding_box()
+    if box is None:
+      return
+    size = max(box[1] - box[0])
+    self.radius = size
+    self.near = size / 2.0
+    self.far = size * 10.0
 
   def keyboard(self, ch, x, y):
     if self.is_animating():

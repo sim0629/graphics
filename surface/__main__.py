@@ -11,13 +11,14 @@ import cross
 from data import Data
 import swept
 import title
+import trans
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
 from viewer.wavefront import Mesh
 sys.path.pop()
 
-MODE_VIEW, MODE_CROSS = range(2)
+MODE_VIEW, MODE_CROSS, MODE_TRANS = range(3)
 mode = None
 
 data = None
@@ -25,6 +26,7 @@ model = Mesh()
 steps = 5
 wire = True
 camera = Camera(model)
+trans.camera = camera
 width, height = 600, 600
 
 def reshape(new_width, new_height):
@@ -62,6 +64,8 @@ def keyboard(ch, x, y):
     changeToViewMode()
   elif ch == 'e':
     changeToCrossMode()
+  elif ch == 'r':
+    changeToTransMode()
   elif ch in ['b', 'c', 'n']:
     if ch == 'b':
       t = 'BSPLINE'
@@ -82,6 +86,8 @@ def mouse(button, state, x, y):
     camera.mouse(button, state, x, y)
   elif mode == MODE_CROSS:
     cross.mouse(button, state, x, y)
+  elif mode == MODE_TRANS:
+    trans.mouse(button, state, x, y)
 
 def motion(x, y):
   x, y = normalizeMouse(x, y)
@@ -89,6 +95,8 @@ def motion(x, y):
     camera.motion(x, y)
   elif mode == MODE_CROSS:
     cross.motion(x, y)
+  elif mode == MODE_TRANS:
+    trans.motion(x, y)
 
 def displayView():
   camera.update()
@@ -119,8 +127,10 @@ def display():
     displayView()
   elif mode == MODE_CROSS:
     cross.display()
+  elif mode == MODE_TRANS:
+    trans.display()
   else:
-    pass
+    return
 
   glutSwapBuffers()
   glutPostRedisplay()
@@ -171,6 +181,14 @@ def changeToCrossMode():
   cross.start()
   mode = MODE_CROSS
 
+def changeToTransMode():
+  global mode
+  if mode == MODE_TRANS:
+    return
+  model.clear() # disable show_all and pick
+  trans.start()
+  mode = MODE_TRANS
+
 def parseArguments():
   argc = len(sys.argv)
   if argc < 2:
@@ -187,6 +205,7 @@ def parseArguments():
   global data
   data = Data(filename)
   cross.data = data
+  trans.data = data
 
 if __name__ == '__main__':
   parseArguments()

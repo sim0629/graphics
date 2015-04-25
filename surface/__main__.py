@@ -48,6 +48,10 @@ def keyboard(ch, x, y):
   elif ch == 'p':
     global wire
     wire = not wire
+  elif ch == 'q':
+    changeToViewMode()
+  elif ch == 'e':
+    changeToCrossMode()
   x, y = normalizeMouse(x, y)
   if mode == MODE_VIEW:
     camera.keyboard(ch, x, y)
@@ -129,15 +133,19 @@ def initializeSetting():
   glLineWidth(2.0)
 
 def changeToViewMode():
+  global mode
+  if mode == MODE_VIEW:
+    return
   swept.generate_surface(model, data, steps)
   camera.adjust_to_model()
   camera.see()
-  global mode
   mode = MODE_VIEW
 
 def changeToCrossMode():
-  cross.start()
   global mode
+  if mode == MODE_CROSS:
+    return
+  cross.start()
   mode = MODE_CROSS
 
 def parseArguments():

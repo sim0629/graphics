@@ -67,6 +67,15 @@ def displayView():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
   glMatrixMode(GL_MODELVIEW)
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+  glColor(1.0, 1.0, 1.0)
+  glEnable(GL_LIGHTING)
+  model.render()
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+  glColor(0.5, 1.0, 0.5)
+  glDisable(GL_LIGHTING)
   model.render()
 
 def display():
@@ -91,19 +100,19 @@ def initializeWindow():
   glutMouseFunc(mouse)
   glutMotionFunc(motion)
 
-def settingForViewMode():
+def initializeSetting():
   glClearDepth(1.0)
   glClearColor(0.0, 0.0, 0.0, 0.0)
 
   glEnable(GL_DEPTH_TEST)
-  glEnable(GL_LIGHTING)
   glEnable(GL_LIGHT0)
   glEnable(GL_COLOR_MATERIAL)
 
   glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
 
+  glLineWidth(2.0)
+
 def changeToViewMode():
-  settingForViewMode()
   swept.generate_surface(model, data, steps)
   camera.adjust_to_model()
   camera.see()
@@ -129,5 +138,6 @@ def parseArguments():
 if __name__ == '__main__':
   parseArguments()
   initializeWindow()
+  initializeSetting()
   changeToViewMode()
   glutMainLoop()

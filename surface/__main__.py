@@ -131,6 +131,7 @@ def initializeSetting():
   glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
 
   glLineWidth(2.0)
+  glPointSize(10.0)
 
 def changeToViewMode():
   global mode

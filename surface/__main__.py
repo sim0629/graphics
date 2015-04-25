@@ -7,6 +7,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+import cross
 from data import Data
 import swept
 
@@ -15,7 +16,7 @@ from viewer.camera import Camera
 from viewer.wavefront import Mesh
 sys.path.pop()
 
-MODE_VIEW, MODE_EDIT = range(2)
+MODE_VIEW, MODE_CROSS = range(2)
 mode = None
 
 data = None
@@ -47,19 +48,25 @@ def keyboard(ch, x, y):
   elif ch == 'p':
     global wire
     wire = not wire
+  x, y = normalizeMouse(x, y)
   if mode == MODE_VIEW:
-    x, y = normalizeMouse(x, y)
     camera.keyboard(ch, x, y)
+  elif mode == MODE_CROSS:
+    cross.keyboard(ch, x, y)
 
 def mouse(button, state, x, y):
+  x, y = normalizeMouse(x, y)
   if mode == MODE_VIEW:
-    x, y = normalizeMouse(x, y)
     camera.mouse(button, state, x, y)
+  elif mode == MODE_CROSS:
+    cross.mouse(button, state, x, y)
 
 def motion(x, y):
+  x, y = normalizeMouse(x, y)
   if mode == MODE_VIEW:
-    x, y = normalizeMouse(x, y)
     camera.motion(x, y)
+  elif mode == MODE_CROSS:
+    cross.motion(x, y)
 
 def displayView():
   camera.update()
@@ -88,6 +95,8 @@ def displayView():
 def display():
   if mode == MODE_VIEW:
     displayView()
+  elif mode == MODE_CROSS:
+    cross.display()
   else:
     pass
 
@@ -126,6 +135,11 @@ def changeToViewMode():
   global mode
   mode = MODE_VIEW
 
+def changeToCrossMode():
+  cross.start()
+  global mode
+  mode = MODE_CROSS
+
 def parseArguments():
   argc = len(sys.argv)
   if argc < 2:
@@ -141,6 +155,7 @@ def parseArguments():
     sys.exit(0)
   global data
   data = Data(filename)
+  cross.data = data
 
 if __name__ == '__main__':
   parseArguments()

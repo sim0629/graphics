@@ -42,6 +42,30 @@ def motion(x, y):
 
 def display():
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+  glMatrixMode(GL_MODELVIEW)
+
+  for i in xrange(data.n):
+    glPushMatrix()
+    glScale(data.scales[i],
+            1.0,
+            data.scales[i])
+    glRotate(data.rotations[i][0] * 180.0 / np.pi,
+             data.rotations[i][1],
+             data.rotations[i][2],
+             data.rotations[i][3])
+    glTranslate(data.positions[i][0],
+                data.positions[i][1],
+                data.positions[i][2])
+    glColor(1.0, 1.0, 1.0)
+    glBegin(GL_POLYGON)
+    for p in data.points[i]:
+      glVertex(p[0], 0.0, p[1])
+    glEnd()
+    glColor(0.5, 0.5, 1.0)
+    glBegin(GL_POINTS)
+    glVertex(0.0, 0.0, 0.0)
+    glEnd()
+    glPopMatrix()
 
 def pick_point():
   return True
@@ -55,6 +79,8 @@ def refresh_title():
 def start():
   glDisable(GL_LIGHTING)
   glClearColor(0.0, 0.0, 0.0, 0.0)
+  glPolygonMode(GL_FRONT, GL_FILL)
+  glPolygonMode(GL_BACK, GL_LINE)
 
   camera.see()
 

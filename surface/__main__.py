@@ -55,6 +55,8 @@ def changeType(t):
 def keyboard(ch, x, y):
   if ch == chr(27): # esc
     sys.exit(0)
+  elif ch == chr(13): # enter
+    data.save()
   elif ch == '+' or ch == '-':
     changeSteps(1 if ch == '+' else -1)
   elif ch == 'p':

@@ -131,7 +131,12 @@ def move_point():
     mag = 10.0 ** diff
     data.scales[drag.picked_i] = drag.picked_scale * mag
   elif drag.method == TRANSLATING:
-    pass
+    v = drag.picked_position - camera.pos
+    l = np.sqrt(v.dot(v))
+    w = camera._nearplane_point(drag.target, False) - camera.pos
+    w /= np.sqrt(w.dot(w))
+    w *= l
+    data.positions[drag.picked_i] = camera.pos + w
   else: # drag.method == ROTATING
     pass
 

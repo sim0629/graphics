@@ -126,14 +126,13 @@ class Camera:
 
   def _nearplane_point(self, point, prev = True):
     size = self._get_nearplane_half_size()
-    point *= size
     n, u, v = self._get_nuv(prev)
     if prev:
       o = self.prev_pos - self.near * n
     else:
       o = self.pos - self.near * n
-    du = point[X] * u
-    dv = point[Y] * v
+    du = size[X] * point[X] * u
+    dv = size[Y] * point[Y] * v
     return o + du + dv
 
   def translate_start(self, source):

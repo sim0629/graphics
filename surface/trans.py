@@ -70,16 +70,16 @@ def display():
 
   for i in xrange(data.n):
     glPushMatrix()
-    glScale(data.scales[i],
-            1.0,
-            data.scales[i])
+    glTranslate(data.positions[i][0],
+                data.positions[i][1],
+                data.positions[i][2])
     glRotate(data.rotations[i][0] * 180.0 / np.pi,
              data.rotations[i][1],
              data.rotations[i][2],
              data.rotations[i][3])
-    glTranslate(data.positions[i][0],
-                data.positions[i][1],
-                data.positions[i][2])
+    glScale(data.scales[i],
+            1.0,
+            data.scales[i])
     glColor(1.0, 1.0, 1.0)
     glBegin(GL_POLYGON)
     for p in data.points[i]:

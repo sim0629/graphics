@@ -8,6 +8,12 @@ from OpenGL.GL import *
 
 import title
 
+sys.path.insert(0, os.path.join(sys.path[0], '..'))
+from jhm.vector import Vector
+from jhm.quaternion import Quaternion
+import viewer.quaternion as qt
+sys.path.pop()
+
 SCALING, TRANSLATING, ROTATING = range(3)
 camera = None
 data = None
@@ -138,7 +144,13 @@ def move_point():
     w *= l
     data.positions[drag.picked_i] = camera.pos + w
   else: # drag.method == ROTATING
-    pass
+    a = camera._nearplane_point(drag.target, False) - camera.pos
+    b = camera._nearplane_point(drag.source, False) - camera.pos
+    q = qt.from_two_vectors(a, b)
+    o = Quaternion.pow(Vector.from_list(drag.picked_rotation[1:]).normalize(), drag.picked_rotation[0])
+    q = o * q
+    v = Quaternion.ln(q)
+    data.rotations[drag.picked_i] = [v.length()] + v.normalize().to_list()
 
 def refresh_title():
   title.change('Transforming')

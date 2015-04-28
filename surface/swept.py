@@ -62,7 +62,7 @@ def interpolate_quaternions(n, quaternions, steps):
   tangents = [~quaternions[0] * quaternions[1]] # for [0]
   for i in xrange(1, n - 1):
     tangents.append(~quaternions[i - 1] * quaternions[i + 1])
-  tangents.append(quaternions[n - 2] * quaternions[n - 1]) # for [n - 1]
+  tangents.append(~quaternions[n - 2] * quaternions[n - 1]) # for [n - 1]
   tangents = map(lambda q: Quaternion.ln(q).div(2.0), tangents)
   # splines
   for i in xrange(1, n):
@@ -180,7 +180,7 @@ def construct_mesh(model, points, scales, rotations, positions):
 def generate_surface(model, data, steps = 10):
   # transformation factors
   scales = interpolate_vectors(data.n, data.scales, steps)
-  rotations = interpolate_quaternions(data.n, map(lambda rotation: Quaternion.pow(Vector.from_list(rotation[1:]), rotation[0]), data.rotations), steps)
+  rotations = interpolate_quaternions(data.n, map(lambda rotation: Quaternion.pow(Vector.from_list(rotation[1:]), rotation[0] / 2.0), data.rotations), steps)
   positions = interpolate_vectors(data.n, np.array(data.positions), steps)
   # cross sections
   crosses = spline_each_crosses(data.t, data.n, data.m, np.array(data.points), steps)

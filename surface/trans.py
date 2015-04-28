@@ -147,9 +147,8 @@ def move_point():
     a = camera._nearplane_point(drag.target, False) - camera.pos
     b = camera._nearplane_point(drag.source, False) - camera.pos
     q = qt.from_two_vectors(a, b)
-    o = Quaternion.pow(Vector.from_list(drag.picked_rotation[1:]).normalize(), drag.picked_rotation[0])
-    q = o * q
-    v = Quaternion.ln(q)
+    o = Quaternion.pow(Vector.from_list(drag.picked_rotation[1:]), drag.picked_rotation[0])
+    v = Quaternion.ln(q * o)
     data.rotations[drag.picked_i] = [v.length()] + v.normalize().to_list()
 
 def refresh_title():

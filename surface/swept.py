@@ -166,8 +166,8 @@ def construct_mesh(model, points, scales, rotations, positions):
       v1 = np.array(model.vertices[k1])
       v2 = np.array(model.vertices[k2])
       v3 = np.array(model.vertices[k3])
-      n0 = np.cross(v2 - v0, v1 - v0); n0 /= np.sqrt(n0.dot(n0))
-      n1 = np.cross(v1 - v3, v2 - v3); n1 /= np.sqrt(n1.dot(n1))
+      n0 = np.cross(v2 - v0, v1 - v0)
+      n1 = np.cross(v1 - v3, v2 - v3)
       model.normals.append(list(n0))
       model.normals.append(list(n1))
       model.faces.append([[k0, None, k1 * 2],

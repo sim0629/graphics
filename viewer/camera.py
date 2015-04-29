@@ -174,12 +174,12 @@ class Camera:
       sin = r / len_l
       s = np.sqrt(ll - rr)
       cos = s / len_l
-      q = qt.from_axis_and_angle(axis, cos, sin)
+      q = qt.from_axis_and_angle(axis, sin, cos)
       p = self.prev_pos + s * qt.rotate(q, unit_l)
     else: # intersects
       sin = d / len_l
       cos = t / len_l
-      q = qt.from_axis_and_angle(axis, cos, sin)
+      q = qt.from_axis_and_angle(axis, sin, cos)
       dt = np.sqrt(rr - dd)
       t -= dt
       p = self.prev_pos + t * qt.rotate(q, unit_l)

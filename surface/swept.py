@@ -180,7 +180,7 @@ def construct_mesh(model, points, scales, rotations, positions):
 def generate_surface(model, data, steps = 10):
   # transformation factors
   scales = interpolate_vectors(data.n, data.scales, steps)
-  rotations = interpolate_quaternions(data.n, map(lambda rotation: Quaternion.pow(Vector.from_list(rotation[1:]), rotation[0] / 2.0), data.rotations), steps)
+  rotations = interpolate_quaternions(data.n, map(lambda rotation: qt.from_rotation(rotation), data.rotations), steps)
   positions = interpolate_vectors(data.n, np.array(data.positions), steps)
   # cross sections
   crosses = spline_each_crosses(data.t, data.n, data.m, np.array(data.points), steps)

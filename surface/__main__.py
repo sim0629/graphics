@@ -25,6 +25,7 @@ data = None
 model = Mesh()
 steps = 5
 wire = True
+flip = False
 camera = Camera(model)
 trans.camera = camera
 width, height = 600, 600
@@ -62,6 +63,9 @@ def keyboard(ch, x, y):
   elif ch == 'p':
     global wire
     wire = not wire
+  elif ch == 'f':
+    global flip
+    flip = not flip
   elif ch == 'q':
     changeToViewMode()
   elif ch == 'e':
@@ -116,7 +120,7 @@ def displayView():
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
   glColor(1.0, 1.0, 1.0)
   glEnable(GL_LIGHTING)
-  model.render()
+  model.render(flip)
 
   if not wire:
     return

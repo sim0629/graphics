@@ -15,7 +15,7 @@ class Mesh:
     self.normals = []
     self.faces = []
 
-  def render(self):
+  def render(self, flip = False):
     glBegin(GL_TRIANGLES)
 
     for face in self.faces:
@@ -23,7 +23,10 @@ class Mesh:
         vni = point[2]
         if vni is not None:
           vn = self.normals[vni]
-          glNormal(vn[0], vn[1], vn[2])
+          if flip:
+            glNormal(-vn[0], -vn[1], -vn[2])
+          else:
+            glNormal(vn[0], vn[1], vn[2])
         vi = point[0]
         v = self.vertices[vi]
         glVertex(v[0], v[1], v[2])

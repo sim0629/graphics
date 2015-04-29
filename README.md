@@ -3,6 +3,8 @@ Computer Graphics Assignments
 
 SNU 4190.410 2015 Spring
 
+Reports are in `/report/`
+
 Requirements
 ------------
 * freeglut http://freeglut.sourceforge.net/docs/install.php

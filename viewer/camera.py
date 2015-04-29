@@ -51,6 +51,7 @@ class Camera:
     self.near = 3.0
     self.far = 30.0
     self.radius = 7.0 # of virtual trackball
+    self.speed = 1.0 # of dolly in/out
     self.model = model
 
     self.pos_interp = None
@@ -84,7 +85,7 @@ class Camera:
     self._perspective()
 
   def dolly(self, out):
-    speed = -0.1
+    speed = -self.speed
     if out:
       speed = -speed
     v = self.pos - self.ref
@@ -335,6 +336,7 @@ class Camera:
     self.radius = size
     self.near = size / 2.0
     self.far = size * 10.0
+    self.speed = size / 30.0
 
   def keyboard(self, ch, x, y):
     if self.is_animating():

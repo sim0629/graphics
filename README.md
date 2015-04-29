@@ -20,3 +20,8 @@ Viewer
 ------
 * Assignment #2
 * Run `python viewer viewer/grandStaircaseDark.obj`
+
+Surface
+-------
+* Assignment #3
+* Run `python surface surface/trombone.txt` and press `space` to show all

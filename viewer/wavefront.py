@@ -61,6 +61,20 @@ class Mesh:
       [max_x, max_y, max_z],
     ])
 
+  def to_stl(self, name):
+    for face in self.faces:
+      p0 = face[0]
+      n = self.normals[p0[2]]
+      print "solid %s" % name
+      print "facet normal %e %e %e" % (n[0], n[1], n[2])
+      print "    outer loop"
+      for point in face:
+        v = self.vertices[point[0]]
+        print "        vertex %e %e %e" % (v[0], v[1], v[2])
+      print "    endloop"
+      print "endfacet"
+      print "endsolid %s" % name
+
   @classmethod
   def load_from_file(cls, filename):
     mesh = cls()

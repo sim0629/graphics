@@ -26,6 +26,7 @@ model = Mesh()
 steps = 5
 wire = True
 flip = False
+enclosed = False
 camera = Camera(model)
 trans.camera = camera
 width, height = 600, 600
@@ -42,7 +43,7 @@ def normalizeMouse(x, y):
 def changeSteps(d):
   global steps
   steps = max(1, steps + d)
-  swept.generate_surface(model, data, steps)
+  swept.generate_surface(model, data, steps, enclosed)
 
 def changeType(t):
   global data
@@ -58,6 +59,12 @@ def keyboard(ch, x, y):
     sys.exit(0)
   elif ch == chr(13): # enter
     data.save()
+  elif ch == 'k':
+    global enclosed
+    enclosed = not enclosed
+    updateSurface()
+  elif ch == 'l':
+    model.to_stl(data.filename)
   elif ch == '+' or ch == '-':
     changeSteps(1 if ch == '+' else -1)
   elif ch == 'p':
@@ -171,7 +178,7 @@ def initializeSetting():
   glPointSize(10.0)
 
 def updateSurface():
-  swept.generate_surface(model, data, steps)
+  swept.generate_surface(model, data, steps, enclosed)
   camera.adjust_to_model()
 
 def changeToViewMode():

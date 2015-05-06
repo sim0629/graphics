@@ -141,7 +141,7 @@ def interpolate_crosses(n, crosses, steps):
        for points in np.swapaxes(crosses, 0, 1)]),
     0, 1)
 
-def construct_mesh(model, points, scales, rotations, positions):
+def construct_mesh(model, points, scales, rotations, positions, enclosed):
   model.clear()
   n, m, _ = points.shape
   for pp in points:
@@ -177,7 +177,24 @@ def construct_mesh(model, points, scales, rotations, positions):
                           [k1, None, k1 * 2 + 1],
                           [k2, None, k1 * 2 + 1]])
 
-def generate_surface(model, data, steps = 10):
+  if enclosed:
+    for i in [0, n - 1]:
+      o = i * m + 0
+      for j in xrange(2, m):
+        a = i * m + j
+        b = i * m + j - 1
+        if i == 0:
+          c = a
+          a = b
+          b = c
+        norm = np.cross(np.array(model.vertices[a]) - np.array(model.vertices[o]), np.array(model.vertices[b]) - np.array(model.vertices[o]))
+        model.normals.append(list(norm))
+        norm_i = len(model.normals) - 1
+        model.faces.append([[o, None, norm_i],
+                            [a, None, norm_i],
+                            [b, None, norm_i]])
+
+def generate_surface(model, data, steps, enclosed):
   # transformation factors
   scales = interpolate_vectors(data.n, data.scales, steps)
   rotations = interpolate_quaternions(data.n, map(lambda rotation: qt.from_rotation(rotation), data.rotations), steps)
@@ -186,5 +203,5 @@ def generate_surface(model, data, steps = 10):
   crosses = spline_each_crosses(data.t, data.n, data.m, np.array(data.points), steps)
   points = interpolate_crosses(data.n, np.array(list(crosses)), steps)
   # mesh
-  construct_mesh(model, points, scales, rotations, positions)
+  construct_mesh(model, points, scales, rotations, positions, enclosed)
 

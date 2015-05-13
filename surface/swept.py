@@ -144,6 +144,8 @@ def interpolate_crosses(n, crosses, steps):
 def construct_mesh(model, points, scales, rotations, positions, enclosed):
   model.clear()
   n, m, _ = points.shape
+  idx = lambda i, j: i * m + j % m
+  # vertices
   for pp in points:
     scale = next(scales)
     rotation = next(rotations)
@@ -153,30 +155,57 @@ def construct_mesh(model, points, scales, rotations, positions, enclosed):
         [p[0] * scale, 0.0, p[1] * scale]
       ) + position
       model.vertices.append(list(vertex))
+  # normals
+  for i in xrange(n):
+    for j in xrange(m):
+      # 4 3
+      # 5 C 2
+      #   0 1
+      center = np.array(model.vertices[idx(i, j)])
+      indices = [idx(i    , j - 1),
+                 idx(i + 1, j - 1),
+                 idx(i + 1, j    ),
+                 idx(i    , j + 1),
+                 idx(i - 1, j + 1),
+                 idx(i - 1, j    )]
+      if i == 0:
+        boundary = np.array([model.vertices[indices[0]],
+                             model.vertices[indices[1]],
+                             model.vertices[indices[2]],
+                             model.vertices[indices[3]]])
+      elif i == n - 1:
+        boundary = np.array([model.vertices[indices[3]],
+                             model.vertices[indices[4]],
+                             model.vertices[indices[5]],
+                             model.vertices[indices[0]]])
+      else:
+        vertices = [model.vertices[index] for index in indices]
+        vertices.append(model.vertices[indices[0]])
+        boundary = np.array(vertices)
+      norm = np.zeros(np.shape(center))
+      for k in xrange(len(boundary) - 1):
+        norm_k = np.cross(boundary[k] - center, boundary[k + 1] - center)
+        norm_k /= np.sqrt(norm_k.dot(norm_k))
+        norm += norm_k
+      norm /= len(boundary) - 1
+      model.normals.append(list(norm))
+  # faces
   for i in xrange(1, n):
     for j in xrange(m):
       # 1   3
       #   \
       # 0   2
-      k0 = (i - 1) * m + (j - 1) % m
-      k1 = (i - 1) * m + j
-      k2 = i * m + (j - 1) % m
-      k3 = i * m + j
-      v0 = np.array(model.vertices[k0])
-      v1 = np.array(model.vertices[k1])
-      v2 = np.array(model.vertices[k2])
-      v3 = np.array(model.vertices[k3])
-      n0 = np.cross(v2 - v0, v1 - v0)
-      n1 = np.cross(v1 - v3, v2 - v3)
-      model.normals.append(list(n0))
-      model.normals.append(list(n1))
-      model.faces.append([[k0, None, k1 * 2],
-                          [k2, None, k1 * 2],
-                          [k1, None, k1 * 2]])
-      model.faces.append([[k3, None, k1 * 2 + 1],
-                          [k1, None, k1 * 2 + 1],
-                          [k2, None, k1 * 2 + 1]])
-
+      k0 = idx(i - 1, j - 1)
+      k1 = idx(i - 1, j)
+      k2 = idx(i, j - 1)
+      k3 = idx(i, j)
+      model.faces.append([[k0, None, k0],
+                          [k2, None, k2],
+                          [k1, None, k1]])
+      model.faces.append([[k3, None, k3],
+                          [k1, None, k1],
+                          [k2, None, k2]])
+  # caps
   if enclosed:
     for i in [0, n - 1]:
       o = i * m + 0

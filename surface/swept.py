@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from jhm.vector import Vector
 from jhm.quaternion import Quaternion
 import viewer.quaternion as qt
-sys.path.pop()
+sys.path.pop(0)
 
 import data
 

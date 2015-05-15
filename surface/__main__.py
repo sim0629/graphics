@@ -16,7 +16,7 @@ import trans
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
 from viewer.wavefront import Mesh
-sys.path.pop()
+sys.path.pop(0)
 
 MODE_VIEW, MODE_CROSS, MODE_TRANS = range(3)
 mode = None

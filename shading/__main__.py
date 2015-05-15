@@ -7,13 +7,15 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 
+from scene import Scene
+
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
 from viewer.wavefront import Mesh
 sys.path.pop(0)
 
-model = Mesh.load_from_file(os.path.join(sys.path[0], 'ring.obj'))
-camera = Camera(model)
+model = None
+camera = None
 width, height = 600, 600
 
 def reshape(new_width, new_height):
@@ -79,10 +81,24 @@ def initializeSetting():
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
   glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
 
+def prepareScene():
+  scene = Scene()
+
+  ring = Mesh.load_from_file(os.path.join(sys.path[0], 'ring.obj'))
+  cube = Mesh.load_from_file(os.path.join(sys.path[0], '../viewer/cube.obj'))
+  scene.add_object(ring)
+  scene.add_object(cube, [0.5, 0.5, 0.5], [1.57, 1.0, 0.0, 0.0], [0.2, 0.0, 0.0])
+
+  global model
+  model = scene.to_mesh()
+
+  global camera
+  camera = Camera(model)
   camera.adjust_to_model()
   camera.see()
 
 if __name__ == '__main__':
   initializeWindow()
   initializeSetting()
+  prepareScene()
   glutMainLoop()

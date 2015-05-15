@@ -63,6 +63,8 @@ def keyboard(ch, x, y):
     global enclosed
     enclosed = not enclosed
     updateSurface()
+  elif ch == 'o':
+    model.to_obj()
   elif ch == 'l':
     model.to_stl(data.filename)
   elif ch == '+' or ch == '-':

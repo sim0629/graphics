@@ -61,6 +61,19 @@ class Mesh:
       [max_x, max_y, max_z],
     ])
 
+  def to_obj(self):
+    for vertex in self.vertices:
+      print "v %f %f %f" % tuple(vertex)
+    for texture in self.textures:
+      print "vt %f %f" % tuple(texture)
+    for normal in self.normals:
+      print "vn %f %f %f" % tuple(normal)
+    for face in self.faces:
+      print "f %s %s %s" % tuple([("%d/%s/%s" % (p[0] + 1,
+        "" if p[1] is None else p[1] + 1,
+        "" if p[2] is None else p[2] + 1)).strip('/')
+        for p in face])
+
   def to_stl(self, name):
     for face in self.faces:
       p0 = face[0]

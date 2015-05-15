@@ -96,6 +96,7 @@ def prepareScene():
   camera = Camera(model)
   camera.adjust_to_model()
   camera.see()
+  camera.show_all()
 
 if __name__ == '__main__':
   initializeWindow()

@@ -8,6 +8,7 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 from scene import Scene
+from bsp import BspTree
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
@@ -15,6 +16,7 @@ from viewer.wavefront import Mesh
 sys.path.pop(0)
 
 model = None
+tree = None
 camera = None
 width, height = 600, 600
 
@@ -89,8 +91,9 @@ def prepareScene():
   scene.add_object(ring)
   scene.add_object(cube, [0.5, 0.5, 0.5], [1.57, 1.0, 0.0, 0.0], [0.2, 0.0, 0.0])
 
-  global model
+  global model, tree
   model = scene.to_mesh()
+  tree = BspTree.tree(model)
 
   global camera
   camera = Camera(model)

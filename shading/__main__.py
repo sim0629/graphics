@@ -9,10 +9,10 @@ from OpenGL.GL import *
 
 from scene import Scene
 from bsp import BspTree
+import material
 
 sys.path.insert(0, os.path.join(sys.path[0], '..'))
 from viewer.camera import Camera
-from viewer.wavefront import Mesh
 sys.path.pop(0)
 
 tree = None
@@ -53,7 +53,6 @@ def display():
 
   glMatrixMode(GL_MODELVIEW)
   glBegin(GL_TRIANGLES)
-  glColor(1.0, 1.0, 1.0)
   if tree is not None:
     tree.render(camera.pos)
   glEnd()
@@ -77,21 +76,21 @@ def initializeWindow():
 def initializeSetting():
   glEnable(GL_NORMALIZE)
   glEnable(GL_LIGHTING)
-  glEnable(GL_COLOR_MATERIAL)
 
   glEnable(GL_LIGHT0)
-  glLight(GL_LIGHT0, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
-  glLight(GL_LIGHT0, GL_DIFFUSE, (0.9, 0.9, 0.9, 1.0))
+  glLight(GL_LIGHT0, GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
+  glLight(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
   glLight(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
   glLight(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 1.0))
+
+  glEnable(GL_BLEND)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 def prepareScene():
   scene = Scene()
 
-  ring = Mesh.load_from_file(os.path.join(sys.path[0], 'ring.obj'))
-  cube = Mesh.load_from_file(os.path.join(sys.path[0], '../viewer/cube.obj'))
+  ring = material.load_object('ring')
   scene.add_object(ring)
-  scene.add_object(cube, [0.5, 0.5, 0.5], [1.57, 1.0, 0.0, 0.0], [0.2, 0.0, 0.0])
 
   global tree
   model = scene.to_mesh()

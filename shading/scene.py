@@ -22,6 +22,7 @@ class Scene:
 
   def to_mesh(self):
     mesh = Mesh()
+    mesh.materials = []
 
     for obj in self.objects:
       v_ofs = len(mesh.vertices)
@@ -44,6 +45,8 @@ class Scene:
          p[1] + vt_ofs if p[1] is not None else None,
          p[2] + vn_ofs if p[2] is not None else None]
         for p in face] for face in obj[MODEL].faces]
+
+      mesh.materials += obj[MODEL].materials
 
     return mesh
 

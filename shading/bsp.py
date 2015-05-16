@@ -3,6 +3,8 @@
 import numpy as np
 import random
 
+import material
+
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
@@ -85,6 +87,7 @@ class BspTree:
             mesh.faces[fi] = [face[i0], face[i1], [new_vi, None, new_ni]]
             new_fi = len(mesh.faces)
             mesh.faces.append([face[i0], [new_vi, None, new_ni], face[i2]])
+            mesh.materials.append(mesh.materials[fi])
             if s[i1] < 0:
               left.append(fi)
               right.append(new_fi)
@@ -111,6 +114,7 @@ class BspTree:
           mesh.normals.append(list(new_n1))
           new_fi1 = len(mesh.faces)
           mesh.faces.append([[new_vi1, None, new_ni1], face[i1], face[i2]])
+          mesh.materials.append(mesh.materials[fi])
           t2 = plane_n.dot(plane_v - v[i0]) / plane_n.dot(v[i2] - v[i0])
           new_v2 = lin_interp(t2, v[i0], v[i2])
           new_n2 = lin_interp(t2, n[i0], n[i2])
@@ -120,6 +124,7 @@ class BspTree:
           mesh.normals.append(list(new_n2))
           new_fi2 = len(mesh.faces)
           mesh.faces.append([[new_vi1, None, new_ni1], face[i2], [new_vi2, None, new_ni2]])
+          mesh.materials.append(mesh.materials[fi])
           mesh.faces[fi] = [face[i0], [new_vi1, None, new_ni1], [new_vi2, None, new_ni2]]
           if s[i0] < 0:
             left.append(fi)
@@ -159,6 +164,7 @@ class BspTree:
       if self.left is not None:
         self.left.render(eye)
 
+    material.apply_property(self.mesh.materials[self.mid])
     for point in face:
       norm = self.mesh.normals[point[2]]
       glNormal(norm[0], norm[1], norm[2])

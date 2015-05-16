@@ -81,7 +81,16 @@ def initializeSetting():
   glLight(GL_LIGHT0, GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
   glLight(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
   glLight(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-  glLight(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 1.0))
+  glLight(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
+
+  glEnable(GL_LIGHT1)
+  glLight(GL_LIGHT1, GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
+  glLight(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
+  glLight(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+  glLight(GL_LIGHT1, GL_POSITION, (0.0, 0.0, 1.0, 1.0))
+  glLight(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0)
+  glLight(GL_LIGHT1, GL_SPOT_DIRECTION, (0.0, 0.0, 0.0, 1.0))
+  glLight(GL_LIGHT1, GL_SPOT_EXPONENT, 2.0)
 
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)

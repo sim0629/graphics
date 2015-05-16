@@ -71,15 +71,18 @@ def initializeWindow():
   glutMotionFunc(motion)
 
 def initializeSetting():
-  glEnable(GL_LIGHTING)
-  glEnable(GL_LIGHT0)
-  glEnable(GL_COLOR_MATERIAL)
   glEnable(GL_NORMALIZE)
-  glEnable(GL_DEPTH_TEST)
+  glEnable(GL_LIGHTING)
+  glEnable(GL_COLOR_MATERIAL)
 
+  glEnable(GL_LIGHT0)
+  glLight(GL_LIGHT0, GL_AMBIENT, (0.1, 0.1, 0.1, 1.0))
+  glLight(GL_LIGHT0, GL_DIFFUSE, (0.9, 0.9, 0.9, 1.0))
+  glLight(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+  glLight(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 1.0))
+
+  glEnable(GL_DEPTH_TEST)
   glClearDepth(1.0)
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-  glLightfv(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 0.0))
 
 def prepareScene():
   scene = Scene()

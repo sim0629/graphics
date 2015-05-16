@@ -22,6 +22,11 @@ def apply_property(name):
     diffuse = (0.75164, 0.60648, 0.22648, 1.0)
     specular = (0.628281, 0.555802, 0.366065, 1.0)
     shininess = 0.4
+  elif name == 'cube':
+    ambient = (0.0, 0.0, 0.0, 0.5)
+    diffuse = (0.1, 0.65, 0.1, 0.5)
+    specular = (0.45, 0.55, 0.45, 0.5)
+    shininess = 0.25
   else:
     ambient = (0.1, 0.1, 0.1, 1.0)
     diffuse = (0.9, 0.9, 0.9, 1.0)

@@ -91,6 +91,8 @@ def prepareScene():
 
   ring = material.load_object('ring')
   scene.add_object(ring, [1.0, 1.0, 1.0], [1.05, -1.0, 0.0, 0.0], [0.0, 0.0, 0.0])
+  cube = material.load_object('cube')
+  scene.add_object(cube, [0.5, 0.5, 0.5], [0.0, 1.0, 0.0, 0.0], [0.2, 0.0, 0.6])
 
   global tree
   model = scene.to_mesh()

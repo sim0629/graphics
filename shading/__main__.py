@@ -15,7 +15,6 @@ from viewer.camera import Camera
 from viewer.wavefront import Mesh
 sys.path.pop(0)
 
-model = None
 tree = None
 camera = None
 width, height = 600, 600
@@ -53,8 +52,11 @@ def display():
   glClear(GL_COLOR_BUFFER_BIT)
 
   glMatrixMode(GL_MODELVIEW)
+  glBegin(GL_TRIANGLES)
   glColor(1.0, 1.0, 1.0)
-  model.render()
+  if tree is not None:
+    tree.render(camera.pos)
+  glEnd()
 
   glutSwapBuffers()
   glutPostRedisplay()
@@ -91,7 +93,7 @@ def prepareScene():
   scene.add_object(ring)
   scene.add_object(cube, [0.5, 0.5, 0.5], [1.57, 1.0, 0.0, 0.0], [0.2, 0.0, 0.0])
 
-  global model, tree
+  global tree
   model = scene.to_mesh()
   tree = BspTree.tree(model)
 

@@ -3,6 +3,10 @@
 import numpy as np
 import random
 
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
+from OpenGL.GL import *
+
 V, VT, VN = range(3)
 EPS = 1e-4
 
@@ -134,8 +138,39 @@ class BspTree:
     self.left = None if len(left) == 0 else BspTree(mesh, left)
     self.right = None if len(right) == 0 else BspTree(mesh, right)
 
-  def render(self):
-    pass
+  def render(self, eye):
+    v = [None, None, None]
+
+    face = self.mesh.faces[self.mid]
+    v[0] = np.array(self.mesh.vertices[face[0][V]])
+    v[1] = np.array(self.mesh.vertices[face[1][V]])
+    v[2] = np.array(self.mesh.vertices[face[2][V]])
+
+    plane_v = v[0]
+    plane_n = np.cross(v[1] - v[0], v[2] - v[0])
+    plane_n /= np.sqrt(plane_n.dot(plane_n))
+
+    s = plane_n.dot(eye - plane_v)
+
+    if s < 0:
+      if self.right is not None:
+        self.right.render(eye)
+    else:
+      if self.left is not None:
+        self.left.render(eye)
+
+    for point in face:
+      norm = self.mesh.normals[point[2]]
+      glNormal(norm[0], norm[1], norm[2])
+      vert = self.mesh.vertices[point[0]]
+      glVertex(vert[0], vert[1], vert[2])
+
+    if s < 0:
+      if self.left is not None:
+        self.left.render(eye)
+    else:
+      if self.right is not None:
+        self.right.render(eye)
 
   @classmethod
   def tree(cls, mesh):

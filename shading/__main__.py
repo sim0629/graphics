@@ -48,7 +48,7 @@ def display():
     glClearColor(0.5, 0.5, 0.5, 0.0)
   else:
     glClearColor(0.0, 0.0, 0.0, 0.0)
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+  glClear(GL_COLOR_BUFFER_BIT)
 
   glMatrixMode(GL_MODELVIEW)
   glColor(1.0, 1.0, 1.0)
@@ -61,7 +61,7 @@ def initializeWindow():
   glutInit(['shading'])
   glutInitWindowPosition(100, 100)
   glutInitWindowSize(width, height)
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
   glutCreateWindow('Shading by Gyumin Sim')
 
   glutReshapeFunc(reshape)
@@ -80,9 +80,6 @@ def initializeSetting():
   glLight(GL_LIGHT0, GL_DIFFUSE, (0.9, 0.9, 0.9, 1.0))
   glLight(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
   glLight(GL_LIGHT0, GL_POSITION, (1.0, 1.0, 1.0, 1.0))
-
-  glEnable(GL_DEPTH_TEST)
-  glClearDepth(1.0)
 
 def prepareScene():
   scene = Scene()

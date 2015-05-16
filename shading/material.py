@@ -52,6 +52,16 @@ def apply_property(name):
     diffuse = (0.1, 0.65, 0.1, 0.5)
     specular = (0.45, 0.55, 0.45, 0.5)
     shininess = 0.25
+  elif name == 'north':
+    ambient = (0.0, 0.0, 0.0, 0.5)
+    diffuse = (0.65, 0.1, 0.1, 0.5)
+    specular = (0.55, 0.45, 0.45, 0.5)
+    shininess = 0.25
+  elif name == 'south':
+    ambient = (0.0, 0.0, 0.0, 0.5)
+    diffuse = (0.1, 0.1, 0.65, 0.5)
+    specular = (0.45, 0.45, 0.55, 0.5)
+    shininess = 0.25
   else:
     ambient = (0.1, 0.1, 0.1, 1.0)
     diffuse = (0.9, 0.9, 0.9, 1.0)

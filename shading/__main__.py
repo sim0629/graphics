@@ -93,6 +93,8 @@ def prepareScene():
   scene.add_object(ring, [1.0, 1.0, 1.0], [1.05, -1.0, 0.0, 0.0], [0.0, 0.0, 0.0])
   cube = material.load_object('cube')
   scene.add_object(cube, [0.5, 0.5, 0.5], [0.0, 1.0, 0.0, 0.0], [0.2, 0.0, 0.6])
+  magnet = material.load_object('magnet')
+  scene.add_object(magnet, [0.3, 0.3, 0.3], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 0.0])
 
   global tree
   model = scene.to_mesh()

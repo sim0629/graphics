@@ -22,6 +22,31 @@ def apply_property(name):
     diffuse = (0.75164, 0.60648, 0.22648, 1.0)
     specular = (0.628281, 0.555802, 0.366065, 1.0)
     shininess = 0.4
+  elif name == 'silver':
+    ambient = (0.19225, 0.19225, 0.19225, 1.0)
+    diffuse = (0.50754, 0.50754, 0.50754, 1.0)
+    specular = (0.508273, 0.508273, 0.508273, 1.0)
+    shininess = 0.4
+  elif name == 'bronze':
+    ambient = (0.2125, 0.1275, 0.054, 1.0)
+    diffuse = (0.714, 0.4284, 0.18144, 1.0)
+    specular = (0.393548, 0.271906, 0.166721, 1.0)
+    shininess = 0.2
+  elif name == 'pearl':
+    ambient = (0.25, 0.20725, 0.20725, 1.0)
+    diffuse = (1.0, 0.829, 0.829, 1.0)
+    specular = (0.296648, 0.296648, 0.296648, 1.0)
+    shininess = 0.088
+  elif name == 'emerald':
+    ambient = (0.0215, 0.1745, 0.0215, 1.0)
+    diffuse = (0.07568, 0.61424, 0.07568, 1.0)
+    specular = (0.633, 0.727811, 0.633, 1.0)
+    shininess = 0.6
+  elif name == 'jade':
+    ambient = (0.135, 0.2225, 0.1575, 1.0)
+    diffuse = (0.54, 0.89, 0.63, 1.0)
+    specular = (0.316228, 0.316228, 0.316228, 1.0)
+    shininess = 0.1
   elif name == 'cube':
     ambient = (0.0, 0.0, 0.0, 0.5)
     diffuse = (0.1, 0.65, 0.1, 0.5)

@@ -25,3 +25,8 @@ Surface
 -------
 * Assignment #3
 * Run `python surface surface/trombone.txt` and press `space` to show all
+
+Shading
+-------
+* Assignment #4
+* Run `python shading`

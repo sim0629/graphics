@@ -30,3 +30,8 @@ Shading
 -------
 * Assignment #4
 * Run `python shading`
+
+RayTracer
+---------
+* Assignment #5
+* See the orphan branch `ray-tracer`

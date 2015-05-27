@@ -15,14 +15,25 @@ using System.Windows.Shapes;
 
 namespace Gyumin.Graphics.RayTracer
 {
+    using Model;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Scene scene = new Scene();
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.xImage.Source = scene.Render(640, 480);
         }
     }
 }

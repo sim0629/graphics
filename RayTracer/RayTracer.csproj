@@ -67,6 +67,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Material\Phong.cs" />
+    <Compile Include="MathUtil\Geometry.cs" />
+    <Compile Include="MathUtil\Coordinate.cs" />
+    <Compile Include="MathUtil\Plane.cs" />
+    <Compile Include="MathUtil\Polygon.cs" />
+    <Compile Include="MathUtil\Ray.cs" />
+    <Compile Include="Model\Camera.cs" />
+    <Compile Include="Model\Light.cs" />
+    <Compile Include="Model\Rectangle.cs" />
+    <Compile Include="Model\Scene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

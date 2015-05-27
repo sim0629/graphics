@@ -31,12 +31,18 @@ namespace Gyumin.Graphics.RayTracer
             InitializeComponent();
 
             this.Loaded += MainWindow_Loaded;
+            this.Unloaded += MainWindow_Unloaded;
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.ConstructScene();
             this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers);
+        }
+
+        private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void ConstructScene()

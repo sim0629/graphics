@@ -14,7 +14,7 @@ namespace Gyumin.Graphics.RayTracer.Model
 
     public class Scene
     {
-        private Color backgroundColor = Colors.Black;
+        private Color backgroundColor;
 
         private List<Light> lights = new List<Light>();
 
@@ -22,8 +22,9 @@ namespace Gyumin.Graphics.RayTracer.Model
 
         private Camera camera = new Camera();
 
-        public Scene()
+        public Scene(Color backgroundColor)
         {
+            this.backgroundColor = backgroundColor;
         }
 
         private Renderable FirstMeet(Ray ray, out Point3D at)

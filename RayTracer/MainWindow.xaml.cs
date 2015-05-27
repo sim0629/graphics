@@ -24,7 +24,7 @@ namespace Gyumin.Graphics.RayTracer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Scene scene = new Scene();
+        private Scene scene = new Scene(Colors.DeepSkyBlue);
 
         public MainWindow()
         {
@@ -47,19 +47,111 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene()
         {
-            var light = new PointLight(
-                new Point3D(0, 1, -1),
-                Colors.White,
+            var bulb = new PointLight(
+                new Point3D(0, 0.5, -0.5),
+                Color.FromRgb(200, 200, 200),
                 Colors.White);
-            scene.AddLight(light);
+            scene.AddLight(bulb);
 
-            var floor = new Rectangle(
-                new Point3D(1, -1, 1),
-                new Point3D(1, -1, -1),
-                new Point3D(-1, -1, -1),
-                new Point3D(-1, -1, 1),
-                new Phong(Colors.Black, Colors.White, Colors.White, 1));
+            var sun = new DirectionalLight(
+                new Vector3D(1, -1.4, 1),
+                Colors.White,
+                Colors.Black);
+            scene.AddLight(sun);
+
+            var concrete = new Phong(
+                Color.FromRgb(50, 50, 50),
+                Color.FromRgb(150, 150, 150),
+                Colors.White, 5);
+
+            var floor = new SimplePolygon(
+                concrete,
+                new Point3D(1, -0.75, 1),
+                new Point3D(1, -0.75, -1),
+                new Point3D(-1, -0.75, -1),
+                new Point3D(-1, -0.75, 1)
+            );
             scene.AddObject(floor);
+
+            var ceiling = new SimplePolygon(
+                concrete,
+                new Point3D(-1, 0.75, 1),
+                new Point3D(-1, 0.75, -1),
+                new Point3D(1, 0.75, -1),
+                new Point3D(1, 0.75, 1)
+            );
+            scene.AddObject(ceiling);
+
+            var right_wall = new SimplePolygon(
+                concrete,
+                new Point3D(1, -0.75, 1),
+                new Point3D(1, 0.75, 1),
+                new Point3D(1, 0.75, -1),
+                new Point3D(1, -0.75, -1)
+            );
+            scene.AddObject(right_wall);
+
+            var left_wall = new SimplePolygon(
+                concrete,
+                new Point3D(-1, -0.75, -1),
+                new Point3D(-1, 0.75, -1),
+                new Point3D(-1, 0.75, 1),
+                new Point3D(-1, -0.75, 1)
+            );
+            scene.AddObject(left_wall);
+
+            var back_wall_ur = new SimplePolygon(
+                concrete,
+                new Point3D(1, -0.75, -1),
+                new Point3D(1, 0.75, -1),
+                new Point3D(-1, 0.75, -1),
+                new Point3D(-0.5, 0.5, -1),
+                new Point3D(0.5, 0.5, -1),
+                new Point3D(0.5, -0.2, -1)
+            );
+            var back_wall_dl = new SimplePolygon(
+                concrete,
+                new Point3D(-1, 0.75, -1),
+                new Point3D(-1, -0.75, -1),
+                new Point3D(1, -0.75, -1),
+                new Point3D(0.5, -0.2, -1),
+                new Point3D(-0.5, -0.2, -1),
+                new Point3D(-0.5, 0.5, -1)
+            );
+            var back_wall_out_u = new SimplePolygon(
+                concrete,
+                new Point3D(-0.5, 0.5, -1),
+                new Point3D(-0.5, 0.5, -1.2),
+                new Point3D(0.5, 0.5, -1.2),
+                new Point3D(0.5, 0.5, -1)
+            );
+            var back_wall_out_r = new SimplePolygon(
+                concrete,
+                new Point3D(0.5, 0.5, -1),
+                new Point3D(0.5, 0.5, -1.2),
+                new Point3D(0.5, -0.2, -1.2),
+                new Point3D(0.5, -0.2, -1)
+            );
+            var back_wall_out_l = new SimplePolygon(
+                concrete,
+                new Point3D(-0.5, -0.2, -1),
+                new Point3D(-0.5, -0.2, -1.2),
+                new Point3D(-0.5, 0.5, -1.2),
+                new Point3D(-0.5, 0.5, -1)
+            );
+            var back_wall_out_d = new SimplePolygon(
+                concrete,
+                new Point3D(0.5, -0.2, -1),
+                new Point3D(0.5, -0.2, -1.2),
+                new Point3D(-0.5, -0.2, -1.2),
+                new Point3D(-0.5, -0.2, -1)
+            );
+            scene.AddObject(back_wall_ur);
+            scene.AddObject(back_wall_dl);
+            scene.AddObject(back_wall_out_u);
+            scene.AddObject(back_wall_out_r);
+            scene.AddObject(back_wall_out_l);
+            scene.AddObject(back_wall_out_d);
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)

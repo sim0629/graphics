@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
 namespace Gyumin.Graphics.RayTracer.Model
@@ -12,14 +10,14 @@ namespace Gyumin.Graphics.RayTracer.Model
     using Material;
     using MathUtil;
 
-    public class Rectangle : Renderable
+    public class SimplePolygon : Renderable
     {
-        private Polygon polygon;
+        protected Polygon polygon;
 
-        public Rectangle(Point3D p0, Point3D p1, Point3D p2, Point3D p3, Phong material)
+        public SimplePolygon(Phong material, params Point3D[] points)
         {
-            this.polygon = new Polygon(p0, p1, p2, p3);
             this.Material = material;
+            this.polygon = new Polygon(points);
         }
 
         public override bool Intersects(Ray ray, out Point3D intersection)

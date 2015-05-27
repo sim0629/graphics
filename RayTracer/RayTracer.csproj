@@ -79,9 +79,9 @@
     <Compile Include="Model\DirectionalLight.cs" />
     <Compile Include="Model\Light.cs" />
     <Compile Include="Model\PointLight.cs" />
-    <Compile Include="Model\Rectangle.cs" />
     <Compile Include="Model\Renderable.cs" />
     <Compile Include="Model\Scene.cs" />
+    <Compile Include="Model\SimplePolygon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

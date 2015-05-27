@@ -33,7 +33,7 @@ namespace Gyumin.Graphics.RayTracer
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.xImage.Source = scene.Render(640, 480);
+            this.xImage.Source = scene.Render(Config.ImageWidth, Config.ImageHeight);
         }
     }
 }

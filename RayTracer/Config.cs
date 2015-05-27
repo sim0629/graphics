@@ -19,5 +19,7 @@ namespace Gyumin.Graphics.RayTracer
         public static int ImageHeight { get { return imageHeight; } }
 
         public static double ImageHeightD { get { return imageHeight; } }
+
+        public const int NumberOfWorkers = 4;
     }
 }

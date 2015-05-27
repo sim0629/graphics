@@ -76,6 +76,7 @@
     <Compile Include="MathUtil\Polygon.cs" />
     <Compile Include="MathUtil\Ray.cs" />
     <Compile Include="Model\Camera.cs" />
+    <Compile Include="Model\DirectionalLight.cs" />
     <Compile Include="Model\Light.cs" />
     <Compile Include="Model\PointLight.cs" />
     <Compile Include="Model\Rectangle.cs" />

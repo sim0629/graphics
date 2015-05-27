@@ -16,5 +16,7 @@ namespace Gyumin.Graphics.RayTracer.Model
         public Phong Material { get; protected set; }
 
         public abstract bool Intersects(Ray ray, out Point3D intersection);
+
+        public abstract Vector3D NormalAt(Point3D point);
     }
 }

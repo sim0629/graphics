@@ -41,7 +41,10 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene()
         {
-            var light = new Light(new Point3D(0, 1, -1));
+            var light = new PointLight(
+                new Point3D(0, 1, -1),
+                Colors.White,
+                Colors.White);
             scene.AddLight(light);
 
             var floor = new Rectangle(

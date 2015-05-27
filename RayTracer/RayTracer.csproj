@@ -68,6 +68,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Material\ColorUtil.cs" />
     <Compile Include="Material\Phong.cs" />
     <Compile Include="MathUtil\Geometry.cs" />
     <Compile Include="MathUtil\Coordinate.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="MathUtil\Ray.cs" />
     <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\Light.cs" />
+    <Compile Include="Model\PointLight.cs" />
     <Compile Include="Model\Rectangle.cs" />
     <Compile Include="Model\Renderable.cs" />
     <Compile Include="Model\Scene.cs" />

@@ -8,22 +8,16 @@ using System.Windows.Media.Media3D;
 
 namespace Gyumin.Graphics.RayTracer.Model
 {
-    public class Light
+    using MathUtil;
+
+    public abstract class Light
     {
-        private Point3D position = new Point3D();
+        protected Color color;
 
-        private Color intensity = Colors.White;
+        public Color Ambient { get; protected set; }
 
-        private Color ambient = Colors.White;
+        public abstract Color IntensityAt(Point3D point);
 
-        public Light()
-        {
-        }
-
-        public Light(Point3D position)
-            : this()
-        {
-            this.position = position;
-        }
+        public abstract Ray RayFrom(Point3D point);
     }
 }

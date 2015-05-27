@@ -26,5 +26,10 @@ namespace Gyumin.Graphics.RayTracer.Model
         {
             return Geometry.Intersects(ray, this.polygon, out intersection);
         }
+
+        public override Vector3D NormalAt(Point3D point)
+        {
+            return this.polygon.Plane.Normal;
+        }
     }
 }

@@ -30,5 +30,10 @@ namespace Gyumin.Graphics.RayTracer.Model
         {
             return new Ray(point, -this.direction);
         }
+
+        public override double DistanceFrom(Point3D point)
+        {
+            return double.PositiveInfinity;
+        }
     }
 }

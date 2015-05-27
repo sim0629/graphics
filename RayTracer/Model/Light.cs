@@ -19,5 +19,7 @@ namespace Gyumin.Graphics.RayTracer.Model
         public abstract Color IntensityAt(Point3D point);
 
         public abstract Ray RayFrom(Point3D point);
+
+        public abstract double DistanceFrom(Point3D point);
     }
 }

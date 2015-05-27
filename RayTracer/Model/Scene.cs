@@ -69,8 +69,9 @@ namespace Gyumin.Graphics.RayTracer.Model
                 var cos_t = Vector3D.DotProduct(normal, to_light.Direction);
                 if (cos_t > Geometry.Epsilon)
                 {
-                    var unused = new Point3D();
-                    if (this.FirstMeet(to_light, out unused) == null)
+                    var intersection = new Point3D();
+                    if (this.FirstMeet(to_light, out intersection) == null
+                        || Geometry.LessOrEqual(light.DistanceFrom(at), (intersection - at).Length))
                     {
                         color = Color.Add(color,
                             Color.Multiply(

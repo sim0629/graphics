@@ -19,13 +19,17 @@ namespace Gyumin.Graphics.RayTracer.Material
 
         public double K_Reflection { get; private set; }
 
-        public Phong(Color ambient, Color diffuse, Color specular, double shininess, double k_reflection)
+        public double K_Refraction { get; private set; }
+
+        public Phong(Color ambient, Color diffuse, Color specular, double shininess,
+            double k_reflection, double k_refraction)
         {
             this.Ambient = ambient;
             this.Diffuse = diffuse;
             this.Specular = specular;
             this.Shininess = shininess;
             this.K_Reflection = k_reflection;
+            this.K_Refraction = k_refraction;
         }
     }
 }

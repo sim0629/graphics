@@ -17,6 +17,16 @@ namespace Gyumin.Graphics.RayTracer.Model
 
         public abstract bool Intersects(Ray ray, out Point3D intersection);
 
+        public virtual bool Intersects(Line line, out Point3D intersection)
+        {
+            intersection = new Point3D();
+            if (this.Intersects(line.Ray, out intersection))
+            {
+                return Geometry.LessOrEqual((intersection - line.Start).Length, line.Length);
+            }
+            return false;
+        }
+
         public abstract Vector3D NormalAt(Point3D point);
     }
 }

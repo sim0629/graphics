@@ -148,6 +148,5 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             }
             return true;
         }
-
     }
 }

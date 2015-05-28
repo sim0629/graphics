@@ -72,6 +72,7 @@
     <Compile Include="Material\Phong.cs" />
     <Compile Include="MathUtil\Geometry.cs" />
     <Compile Include="MathUtil\Coordinate.cs" />
+    <Compile Include="MathUtil\Line.cs" />
     <Compile Include="MathUtil\Plane.cs" />
     <Compile Include="MathUtil\Polygon.cs" />
     <Compile Include="MathUtil\Ray.cs" />

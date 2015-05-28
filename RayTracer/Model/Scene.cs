@@ -30,19 +30,51 @@ namespace Gyumin.Graphics.RayTracer.Model
         private Renderable FirstMeet(Ray ray, out Point3D at, Renderable except)
         {
             at = new Point3D();
-            var found = this.objects.Select(renderable =>
-            {
-                var intersection = new Point3D();
-                var intersects = renderable.Intersects(ray, out intersection);
-                return new { Renderable = renderable, Intersects = intersects, Intersection = intersection };
-            })
-            .Where(result => result.Renderable != except && result.Intersects)
-            .OrderBy(result => (result.Intersection - ray.Position).Length)
-            .FirstOrDefault();
+            var found = this.objects.Where(o => o != except)
+                .Select(renderable =>
+                {
+                    var intersection = new Point3D();
+                    var intersects = renderable.Intersects(ray, out intersection);
+                    return new { Renderable = renderable, Intersects = intersects, Intersection = intersection };
+                })
+                .Where(result => result.Intersects)
+                .OrderBy(result => (result.Intersection - ray.Position).Length)
+                .FirstOrDefault();
             if (found == null)
                 return null;
             at = found.Intersection;
             return found.Renderable;
+        }
+
+        private Color TransparentLight(Light light, Point3D at, Renderable except)
+        {
+            var color = Colors.White;
+            var unused = new Point3D();
+            var ray = light.RayFrom(at);
+            var distance = light.DistanceFrom(at);
+            Line line = null;
+            Func<Renderable, bool> check;
+            if (double.IsPositiveInfinity(distance))
+            {
+                check = renderable => renderable.Intersects(ray, out unused);
+            }
+            else
+            {
+                line = new Line(ray.Position, ray.Position + distance * ray.Direction);
+                check = renderable => renderable.Intersects(line, out unused);
+            }
+            foreach (var renderable in this.objects.Where(o => o != except))
+            {
+                if (check(renderable))
+                {
+                    var k_refraction = renderable.Material.K_Refraction;
+                    if (Geometry.IsZero(k_refraction))
+                        return Colors.Black;
+                    color = ColorUtil.ElementWiseMultiply(color,
+                        Color.Multiply(renderable.Material.Diffuse, (float)k_refraction));
+                }
+            }
+            return color;
         }
 
         private Color Trace(Ray ray, Renderable except, int depth)
@@ -64,25 +96,34 @@ namespace Gyumin.Graphics.RayTracer.Model
             foreach (var light in this.lights)
             {
                 color = Color.Add(color,
-                    ColorUtil.ElementWiseMultiply(k_a, light.Ambient));
+                    ColorUtil.ElementWiseMultiply(k_a,
+                        Color.Multiply(light.Ambient, (float)(1 - renderable.Material.K_Refraction))));
 
                 var to_light = light.RayFrom(at);
                 var cos_t = Vector3D.DotProduct(normal, to_light.Direction);
+                if (!Geometry.IsZero(renderable.Material.K_Refraction) && cos_t < -Geometry.Epsilon)
+                {
+                    normal = -normal;
+                    cos_t = -cos_t;
+                }
                 if (cos_t > Geometry.Epsilon)
                 {
-                    var intersection = new Point3D();
-                    if (this.FirstMeet(to_light, out intersection, renderable) == null
-                        || Geometry.LessOrEqual(light.DistanceFrom(at), (intersection - at).Length))
+                    var transparent_light_color = this.TransparentLight(light, at, renderable);
+                    if (transparent_light_color != Colors.Black)
                     {
+                        var shadow_light_color = ColorUtil.ElementWiseMultiply(
+                            Color.Multiply(light.IntensityAt(at), (float)(1 - renderable.Material.K_Refraction)),
+                            transparent_light_color);
+
                         color = Color.Add(color,
                             Color.Multiply(
-                                ColorUtil.ElementWiseMultiply(k_d, light.IntensityAt(at)),
+                                ColorUtil.ElementWiseMultiply(k_d, shadow_light_color),
                                 (float)cos_t));
 
                         var reflected = Vector3D.DotProduct(2 * to_light.Direction, normal) * normal - to_light.Direction;
                         color = Color.Add(color,
                             Color.Multiply(
-                                ColorUtil.ElementWiseMultiply(k_s, light.IntensityAt(at)),
+                                ColorUtil.ElementWiseMultiply(k_s, shadow_light_color),
                                 (float)Math.Pow(Vector3D.DotProduct(reflected, -ray.Direction), n)));
                     }
                 }
@@ -97,6 +138,13 @@ namespace Gyumin.Graphics.RayTracer.Model
                 var reflection_ray = new Ray(at,
                     Vector3D.DotProduct(-2 * ray.Direction, normal) * normal + ray.Direction);
                 color = Color.Add(color, Color.Multiply(this.Trace(reflection_ray, renderable, depth + 1), (float)k_reflection));
+            }
+
+            var k_refraction = renderable.Material.K_Refraction;
+            if (!Geometry.IsZero(k_refraction))
+            {
+                var refraction_ray = new Ray(at, ray.Direction); // no snell's law yet
+                color = Color.Add(color, Color.Multiply(this.Trace(refraction_ray, renderable, depth + 1), (float)k_refraction));
             }
 
             return color;

@@ -54,7 +54,7 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddLight(bulb);
 
             var sun = new DirectionalLight(
-                new Vector3D(1, -1.4, 1),
+                new Vector3D(1, -1.3, 1),
                 Colors.White,
                 Colors.Black);
             scene.AddLight(sun);
@@ -63,13 +63,25 @@ namespace Gyumin.Graphics.RayTracer
                 Color.FromRgb(50, 50, 50),
                 Color.FromRgb(150, 150, 150),
                 Colors.White, 5,
-                0);
+                0, 0);
 
             var mirror = new Phong(
-                Color.FromRgb(50, 50, 50),
                 Colors.Black,
+                Color.FromRgb(20, 20, 20),
                 Colors.White, 100,
-                0.9);
+                0.9, 0);
+
+            var glass = new Phong(
+                Colors.Black,
+                Colors.White,
+                Colors.White, 100,
+                0.1, 0.9);
+
+            var filter = new Phong(
+                Colors.Aquamarine,
+                Colors.Aquamarine,
+                Colors.Aquamarine, 60,
+                0, 0.8);
 
             var floor = new SimplePolygon(
                 concrete,
@@ -160,6 +172,15 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(back_wall_out_l);
             scene.AddObject(back_wall_out_d);
 
+            var window = new SimplePolygon(
+                glass,
+                new Point3D(0.5, 0.5, -1),
+                new Point3D(-0.5, 0.5, -1),
+                new Point3D(-0.5, -0.2, -1),
+                new Point3D(0.5, -0.2, -1)
+            );
+            scene.AddObject(window);
+
             var front_wall = new SimplePolygon(
                 concrete,
                 new Point3D(1, 0.75, 1),
@@ -175,6 +196,58 @@ namespace Gyumin.Graphics.RayTracer
                 0.25
             );
             scene.AddObject(ball);
+
+            var cuboid_points = new Point3D[]
+            {
+                new Point3D(0.3, -0.74, -0.3),
+                new Point3D(0.6, -0.74, -0.3),
+                new Point3D(0.6, -0.74, -0.8),
+                new Point3D(0.3, -0.74, -0.8),
+                new Point3D(0.3, -0.2, -0.3),
+                new Point3D(0.6, -0.2, -0.3),
+                new Point3D(0.6, -0.2, -0.8),
+                new Point3D(0.3, -0.2, -0.8),
+            };
+            var cuboid_f = new SimplePolygon(
+                filter,
+                cuboid_points[4],
+                cuboid_points[0],
+                cuboid_points[1],
+                cuboid_points[5]
+            );
+            var cuboid_r = new SimplePolygon(
+                filter,
+                cuboid_points[5],
+                cuboid_points[1],
+                cuboid_points[2],
+                cuboid_points[6]
+            );
+            var cuboid_b = new SimplePolygon(
+                filter,
+                cuboid_points[6],
+                cuboid_points[2],
+                cuboid_points[3],
+                cuboid_points[7]
+            );
+            var cuboid_l = new SimplePolygon(
+                filter,
+                cuboid_points[7],
+                cuboid_points[3],
+                cuboid_points[0],
+                cuboid_points[4]
+            );
+            var cuboid_d = new SimplePolygon(
+                filter,
+                cuboid_points[3],
+                cuboid_points[2],
+                cuboid_points[1],
+                cuboid_points[0]
+            );
+            scene.AddObject(cuboid_f);
+            scene.AddObject(cuboid_r);
+            scene.AddObject(cuboid_b);
+            scene.AddObject(cuboid_l);
+            scene.AddObject(cuboid_d);
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)

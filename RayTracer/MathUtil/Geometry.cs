@@ -124,5 +124,30 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             }
             return false;
         }
+
+        public static bool Intersects(Ray ray, Sphere sphere, out Point3D intersection)
+        {
+            var to_center = sphere.Center - ray.Position;
+            var to_foot_len = Vector3D.DotProduct(to_center, ray.Direction);
+            var to_foot_len2 = to_foot_len * to_foot_len;
+            var distance2 = to_center.LengthSquared - to_foot_len2;
+            if (Geometry.GreaterOrEqual(distance2, sphere.Radius2))
+            {
+                intersection = new Point3D();
+                return false;
+            }
+            var offset2 = sphere.Radius2 - distance2;
+            if (Geometry.IsZero(offset2))
+            {
+                intersection = ray.Position + to_foot_len * ray.Direction;
+            }
+            else
+            {
+                var offset = Math.Sqrt(offset2);
+                intersection = ray.Position + (to_foot_len - offset) * ray.Direction;
+            }
+            return true;
+        }
+
     }
 }

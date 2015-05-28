@@ -169,7 +169,7 @@ namespace Gyumin.Graphics.RayTracer
             );
             scene.AddObject(front_wall);
 
-            var ball = new Sphere(
+            var ball = new SimpleSphere(
                 mirror,
                 new Point3D(-0.3, -0.5, -0.5),
                 0.25

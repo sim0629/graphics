@@ -75,6 +75,7 @@
     <Compile Include="MathUtil\Plane.cs" />
     <Compile Include="MathUtil\Polygon.cs" />
     <Compile Include="MathUtil\Ray.cs" />
+    <Compile Include="MathUtil\Sphere.cs" />
     <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\DirectionalLight.cs" />
     <Compile Include="Model\Light.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Model\Renderable.cs" />
     <Compile Include="Model\Scene.cs" />
     <Compile Include="Model\SimplePolygon.cs" />
-    <Compile Include="Model\Sphere.cs" />
+    <Compile Include="Model\SimpleSphere.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

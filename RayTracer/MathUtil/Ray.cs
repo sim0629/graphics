@@ -7,8 +7,6 @@ using System.Windows.Media.Media3D;
 
 namespace Gyumin.Graphics.RayTracer.MathUtil
 {
-    using Model;
-
     public class Ray
     {
         public Point3D Position { get; private set; }

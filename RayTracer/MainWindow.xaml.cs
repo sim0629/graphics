@@ -77,12 +77,6 @@ namespace Gyumin.Graphics.RayTracer
                 Colors.White, 100,
                 0.1, 0.9);
 
-            var filter = new Phong(
-                Colors.Aquamarine,
-                Colors.Aquamarine,
-                Colors.Aquamarine, 60,
-                0, 0.8);
-
             var royal = new Phong(
                 Colors.RoyalBlue,
                 Colors.RoyalBlue,
@@ -202,58 +196,6 @@ namespace Gyumin.Graphics.RayTracer
                 0.25
             );
             scene.AddObject(ball);
-
-            var cuboid_points = new Point3D[]
-            {
-                new Point3D(0.3, -0.74, -0.3),
-                new Point3D(0.6, -0.74, -0.3),
-                new Point3D(0.6, -0.74, -0.8),
-                new Point3D(0.3, -0.74, -0.8),
-                new Point3D(0.3, -0.2, -0.3),
-                new Point3D(0.6, -0.2, -0.3),
-                new Point3D(0.6, -0.2, -0.8),
-                new Point3D(0.3, -0.2, -0.8),
-            };
-            var cuboid_f = new SimplePolygon(
-                filter,
-                cuboid_points[4],
-                cuboid_points[0],
-                cuboid_points[1],
-                cuboid_points[5]
-            );
-            var cuboid_r = new SimplePolygon(
-                filter,
-                cuboid_points[5],
-                cuboid_points[1],
-                cuboid_points[2],
-                cuboid_points[6]
-            );
-            var cuboid_b = new SimplePolygon(
-                filter,
-                cuboid_points[6],
-                cuboid_points[2],
-                cuboid_points[3],
-                cuboid_points[7]
-            );
-            var cuboid_l = new SimplePolygon(
-                filter,
-                cuboid_points[7],
-                cuboid_points[3],
-                cuboid_points[0],
-                cuboid_points[4]
-            );
-            var cuboid_d = new SimplePolygon(
-                filter,
-                cuboid_points[3],
-                cuboid_points[2],
-                cuboid_points[1],
-                cuboid_points[0]
-            );
-            scene.AddObject(cuboid_f);
-            scene.AddObject(cuboid_r);
-            scene.AddObject(cuboid_b);
-            scene.AddObject(cuboid_l);
-            scene.AddObject(cuboid_d);
 
             var bead = new SimpleSphere(
                 royal,

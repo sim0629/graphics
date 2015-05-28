@@ -81,6 +81,7 @@
     <Compile Include="Model\Camera.cs" />
     <Compile Include="Model\DirectionalLight.cs" />
     <Compile Include="Model\Light.cs" />
+    <Compile Include="Model\Mesh.cs" />
     <Compile Include="Model\PointLight.cs" />
     <Compile Include="Model\Renderable.cs" />
     <Compile Include="Model\Scene.cs" />

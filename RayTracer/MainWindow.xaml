@@ -6,7 +6,7 @@
     <DockPanel>
         <Menu x:Name="xMenu" DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Import .obj" />
+                <MenuItem Header="_Import .stl" x:Name="xImport" />
                 <MenuItem Header="_Export .png" x:Name="xExport" />
             </MenuItem>
             <MenuItem Header="_Render">
@@ -16,15 +16,19 @@
                 <MenuItem Header="_Anti-aliasing" IsCheckable="True" x:Name="xAntiAliasing" />
             </MenuItem>
         </Menu>
-        <Grid>
-            <Image x:Name="xImage"
+        <StackPanel x:Name="xStatusPanel"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    DockPanel.Dock="Bottom"
+                    HorizontalAlignment="Stretch"
+                    Background="LightGray">
+            <ProgressBar x:Name="xProgress"
+                         Width="200"/>
+            <TextBlock Text=" .stl: " />
+            <TextBlock x:Name="xTextBlock" TextWrapping="NoWrap" />
+        </StackPanel>
+        <Image x:Name="xImage"
                Width="{x:Static local:Config.ImageWidthD}"
                Height="{x:Static local:Config.ImageHeightD}" />
-            <ProgressBar x:Name="xProgress"
-                     Height="20"
-                     VerticalAlignment="Bottom"
-                     Visibility="Collapsed"
-                     />
-        </Grid>
     </DockPanel>
 </Window>

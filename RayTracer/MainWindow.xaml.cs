@@ -28,6 +28,8 @@ namespace Gyumin.Graphics.RayTracer
 
         private int progress_value;
 
+        private string stl_file;
+
         private Random random = new Random();
 
         public MainWindow()
@@ -36,6 +38,7 @@ namespace Gyumin.Graphics.RayTracer
 
             this.Unloaded += (sender, e) => { Application.Current.Shutdown(); };
             this.xStart.Click += xStart_Click;
+            this.xImport.Click += xImport_Click;
             this.xExport.Click += xExport_Click;
         }
 
@@ -45,6 +48,12 @@ namespace Gyumin.Graphics.RayTracer
             this.ConstructScene();
             this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
+        }
+
+        private void xImport_Click(object sender, RoutedEventArgs e)
+        {
+            this.stl_file = FileUtil.OpenStl();
+            this.xTextBlock.Text = this.stl_file;
         }
 
         private void xExport_Click(object sender, RoutedEventArgs e)
@@ -246,13 +255,22 @@ namespace Gyumin.Graphics.RayTracer
                 0.1
             );
             scene.AddObject(bead_r);
+
+            if (this.stl_file != null)
+            {
+                var stl = new Mesh(
+                    concrete,
+                    this.stl_file,
+                    new Point3D(0.5, -0.3, -0.6),
+                    0.5);
+                scene.AddObject(stl);
+            }
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n, bool anti_aliasing)
         {
             this.Dispatcher.Invoke(() =>
             {
-                this.xProgress.Visibility = Visibility.Visible;
                 this.xProgress.Minimum = 0;
                 this.xProgress.Maximum = width * height;
                 this.xProgress.Value = progress_value = 0;
@@ -308,7 +326,6 @@ namespace Gyumin.Graphics.RayTracer
             await Task.WhenAll(tasks);
             this.Dispatcher.Invoke(() =>
             {
-                this.xProgress.Visibility = Visibility.Collapsed;
                 this.xProgress.Value = progress_value = 0;
             });
             return BitmapSource.Create(

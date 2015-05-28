@@ -28,5 +28,16 @@ namespace Gyumin.Graphics.RayTracer
                 encoder.Save(stream);
             }
         }
+
+        public static string OpenStl()
+        {
+            var dialog = new OpenFileDialog()
+            {
+                Filter = "ASCII STL|*.stl",
+            };
+            if (dialog.ShowDialog(App.Current.MainWindow) != true)
+                return null;
+            return dialog.FileName;
+        }
     }
 }

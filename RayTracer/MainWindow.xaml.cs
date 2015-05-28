@@ -205,8 +205,8 @@ namespace Gyumin.Graphics.RayTracer
 
             var bead = new SimpleSphere(
                 royal,
-                new Point3D(-0.1, -0.65, -0.2),
-                0.1
+                new Point3D(0, -0.55, 0),
+                0.2
             );
             scene.AddObject(bead);
         }

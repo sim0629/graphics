@@ -20,6 +20,6 @@ namespace Gyumin.Graphics.RayTracer
 
         public static double ImageHeightD { get { return imageHeight; } }
 
-        public const int NumberOfWorkers = 4;
+        public static int NumberOfWorkers = Environment.ProcessorCount - 1;
     }
 }

@@ -26,6 +26,8 @@ namespace Gyumin.Graphics.RayTracer
     {
         private Scene scene = new Scene(Colors.DeepSkyBlue);
 
+        private int progress_value;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -239,6 +241,13 @@ namespace Gyumin.Graphics.RayTracer
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)
         {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.xProgress.Visibility = Visibility.Visible;
+                this.xProgress.Minimum = 0;
+                this.xProgress.Maximum = width * height;
+                this.xProgress.Value = progress_value = 0;
+            });
             var pixels = new byte[3 * width * height];
             var tasks = new List<Task>();
             for (var t = 0; t < n; t++)
@@ -258,6 +267,10 @@ namespace Gyumin.Graphics.RayTracer
                             pixels[index + 0] = color.R;
                             pixels[index + 1] = color.G;
                             pixels[index + 2] = color.B;
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                this.xProgress.Value = ++this.progress_value;
+                            });
                         }
                     }
                 });
@@ -265,6 +278,11 @@ namespace Gyumin.Graphics.RayTracer
                 tasks.Add(task);
             }
             await Task.WhenAll(tasks);
+            this.Dispatcher.Invoke(() =>
+            {
+                this.xProgress.Visibility = Visibility.Collapsed;
+                this.xProgress.Value = progress_value = 0;
+            });
             return BitmapSource.Create(
                 Config.ImageWidth, Config.ImageHeight,
                 96, 96,

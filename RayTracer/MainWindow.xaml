@@ -7,5 +7,10 @@
         <Image x:Name="xImage"
                Width="{x:Static local:Config.ImageWidthD}"
                Height="{x:Static local:Config.ImageHeightD}" />
+        <ProgressBar x:Name="xProgress"
+                     Height="20"
+                     VerticalAlignment="Bottom"
+                     Visibility="Collapsed"
+                     />
     </Grid>
 </Window>

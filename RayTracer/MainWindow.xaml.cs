@@ -83,6 +83,12 @@ namespace Gyumin.Graphics.RayTracer
                 Colors.Aquamarine, 60,
                 0, 0.8);
 
+            var royal = new Phong(
+                Colors.RoyalBlue,
+                Colors.RoyalBlue,
+                Colors.RoyalBlue, 100,
+                0.4, 0.6);
+
             var floor = new SimplePolygon(
                 concrete,
                 new Point3D(1, -0.75, 1),
@@ -248,6 +254,13 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(cuboid_b);
             scene.AddObject(cuboid_l);
             scene.AddObject(cuboid_d);
+
+            var bead = new SimpleSphere(
+                royal,
+                new Point3D(-0.1, -0.65, -0.2),
+                0.1
+            );
+            scene.AddObject(bead);
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)

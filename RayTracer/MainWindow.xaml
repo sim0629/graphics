@@ -3,14 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Gyumin.Graphics.RayTracer"
         Title="Ray Tracer by Gyumin Sim" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize">
-    <Grid>
-        <Image x:Name="xImage"
+    <DockPanel>
+        <Menu x:Name="xMenu" DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Import .obj" />
+                <MenuItem Header="_Export .png" />
+            </MenuItem>
+            <MenuItem Header="_Render">
+                <MenuItem Header="_Start" x:Name="xStart" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Image x:Name="xImage"
                Width="{x:Static local:Config.ImageWidthD}"
                Height="{x:Static local:Config.ImageHeightD}" />
-        <ProgressBar x:Name="xProgress"
+            <ProgressBar x:Name="xProgress"
                      Height="20"
                      VerticalAlignment="Bottom"
                      Visibility="Collapsed"
                      />
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>

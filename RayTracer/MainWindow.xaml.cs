@@ -83,8 +83,14 @@ namespace Gyumin.Graphics.RayTracer
                 Colors.RoyalBlue, 100,
                 0.4, 0.6);
 
+            var marble = new Phong(
+                Color.FromRgb(50, 50, 50),
+                Colors.Beige,
+                Colors.White, 20,
+                0.15, 0);
+
             var floor = new SimplePolygon(
-                concrete,
+                marble,
                 new Point3D(1, -0.75, 1),
                 new Point3D(1, -0.75, -1),
                 new Point3D(-1, -0.75, -1),

@@ -62,7 +62,14 @@ namespace Gyumin.Graphics.RayTracer
             var concrete = new Phong(
                 Color.FromRgb(50, 50, 50),
                 Color.FromRgb(150, 150, 150),
-                Colors.White, 5);
+                Colors.White, 5,
+                0);
+
+            var mirror = new Phong(
+                Color.FromRgb(50, 50, 50),
+                Colors.Black,
+                Colors.White, 100,
+                0.9);
 
             var floor = new SimplePolygon(
                 concrete,
@@ -92,7 +99,7 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(right_wall);
 
             var left_wall = new SimplePolygon(
-                concrete,
+                mirror,
                 new Point3D(-1, -0.75, -1),
                 new Point3D(-1, 0.75, -1),
                 new Point3D(-1, 0.75, 1),
@@ -153,9 +160,18 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(back_wall_out_l);
             scene.AddObject(back_wall_out_d);
 
-            var ball = new Sphere(
+            var front_wall = new SimplePolygon(
                 concrete,
-                new Point3D(-0.2, -0.5, -0.5),
+                new Point3D(1, 0.75, 1),
+                new Point3D(1, -0.75, 1),
+                new Point3D(-1, -0.75, 1),
+                new Point3D(-1, 0.75, 1)
+            );
+            scene.AddObject(front_wall);
+
+            var ball = new Sphere(
+                mirror,
+                new Point3D(-0.3, -0.5, -0.5),
                 0.25
             );
             scene.AddObject(ball);

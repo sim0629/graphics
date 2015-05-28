@@ -45,10 +45,10 @@ namespace Gyumin.Graphics.RayTracer.Model
             return found.Renderable;
         }
 
-        private Color Trace(Ray ray)
+        private Color Trace(Ray ray, Renderable except, int depth)
         {
             var at = new Point3D();
-            var renderable = this.FirstMeet(ray, out at, null);
+            var renderable = this.FirstMeet(ray, out at, except);
             if (renderable == null)
                 return this.backgroundColor;
 
@@ -88,13 +88,24 @@ namespace Gyumin.Graphics.RayTracer.Model
                 }
             }
 
+            if (depth >= 5)
+                return color;
+
+            var k_reflection = renderable.Material.K_Reflection;
+            if (!Geometry.IsZero(k_reflection))
+            {
+                var reflection_ray = new Ray(at,
+                    Vector3D.DotProduct(-2 * ray.Direction, normal) * normal + ray.Direction);
+                color = Color.Add(color, Color.Multiply(this.Trace(reflection_ray, renderable, depth + 1), (float)k_reflection));
+            }
+
             return color;
         }
 
         public Color Trace(double x, double y)
         {
             var ray = this.camera.GetRayToScreen(x, y);
-            return this.Trace(ray);
+            return this.Trace(ray, null, 1);
         }
 
         public void AddLight(Light light)

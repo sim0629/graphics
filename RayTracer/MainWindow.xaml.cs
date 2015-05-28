@@ -83,6 +83,12 @@ namespace Gyumin.Graphics.RayTracer
                 Colors.RoyalBlue, 100,
                 0, 0.6, 1.52);
 
+            var orange = new Phong(
+                Colors.OrangeRed,
+                Colors.OrangeRed,
+                Colors.OrangeRed, 100,
+                0, 0.6, 1.52);
+
             var marble = new Phong(
                 Color.FromRgb(50, 50, 50),
                 Colors.Beige,
@@ -203,12 +209,19 @@ namespace Gyumin.Graphics.RayTracer
             );
             scene.AddObject(ball);
 
-            var bead = new SimpleSphere(
+            var bead_b = new SimpleSphere(
                 royal,
-                new Point3D(-0.1, -0.65, -0.1),
+                new Point3D(0, -0.65, 0),
                 0.1
             );
-            scene.AddObject(bead);
+            scene.AddObject(bead_b);
+
+            var bead_r = new SimpleSphere(
+                orange,
+                new Point3D(-0.15, -0.65, -0.16),
+                0.1
+            );
+            scene.AddObject(bead_r);
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)

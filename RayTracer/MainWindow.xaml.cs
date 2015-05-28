@@ -63,31 +63,31 @@ namespace Gyumin.Graphics.RayTracer
                 Color.FromRgb(50, 50, 50),
                 Color.FromRgb(150, 150, 150),
                 Colors.White, 5,
-                0, 0);
+                0, 0, 1);
 
             var mirror = new Phong(
                 Colors.Black,
                 Color.FromRgb(20, 20, 20),
                 Colors.White, 100,
-                0.9, 0);
+                0.9, 0, 1);
 
             var glass = new Phong(
                 Colors.Black,
                 Colors.White,
                 Colors.White, 100,
-                0.1, 0.9);
+                0.1, 0.9, 1.52);
 
             var royal = new Phong(
                 Colors.RoyalBlue,
                 Colors.RoyalBlue,
                 Colors.RoyalBlue, 100,
-                0.4, 0.6);
+                0, 0.6, 1.52);
 
             var marble = new Phong(
                 Color.FromRgb(50, 50, 50),
                 Colors.Beige,
                 Colors.White, 20,
-                0.15, 0);
+                0.15, 0, 1.6);
 
             var floor = new SimplePolygon(
                 marble,
@@ -205,8 +205,8 @@ namespace Gyumin.Graphics.RayTracer
 
             var bead = new SimpleSphere(
                 royal,
-                new Point3D(0, -0.55, 0),
-                0.2
+                new Point3D(-0.1, -0.65, -0.1),
+                0.1
             );
             scene.AddObject(bead);
         }

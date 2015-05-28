@@ -125,7 +125,7 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             return false;
         }
 
-        public static bool Intersects(Ray ray, Sphere sphere, out Point3D intersection)
+        public static bool Intersects(Ray ray, Sphere sphere, out Point3D intersection, bool far)
         {
             var to_center = sphere.Center - ray.Position;
             var to_foot_len = Vector3D.DotProduct(to_center, ray.Direction);
@@ -144,6 +144,7 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             else
             {
                 var offset = Math.Sqrt(offset2);
+                if (far) offset = -offset;
                 intersection = ray.Position + (to_foot_len - offset) * ray.Direction;
             }
             return true;

@@ -143,7 +143,7 @@ namespace Gyumin.Graphics.RayTracer.Model
             var k_refraction = renderable.Material.K_Refraction;
             if (!Geometry.IsZero(k_refraction))
             {
-                var refraction_ray = new Ray(at, ray.Direction); // no snell's law yet
+                var refraction_ray = renderable.Refracted(at, ray.Direction);
                 color = Color.Add(color, Color.Multiply(this.Trace(refraction_ray, renderable, depth + 1), (float)k_refraction));
             }
 

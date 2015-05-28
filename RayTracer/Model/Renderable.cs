@@ -28,5 +28,10 @@ namespace Gyumin.Graphics.RayTracer.Model
         }
 
         public abstract Vector3D NormalAt(Point3D point);
+
+        public virtual Ray Refracted(Point3D point, Vector3D direction)
+        {
+            return new Ray(point, direction);
+        }
     }
 }

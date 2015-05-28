@@ -28,6 +28,8 @@ namespace Gyumin.Graphics.RayTracer
 
         private int progress_value;
 
+        private Random random = new Random();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +42,7 @@ namespace Gyumin.Graphics.RayTracer
         {
             this.xMenu.IsEnabled = false;
             this.ConstructScene();
-            this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers);
+            this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
         }
 
@@ -240,7 +242,7 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(bead_r);
         }
 
-        private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)
+        private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n, bool anti_aliasing)
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -261,9 +263,28 @@ namespace Gyumin.Graphics.RayTracer
                     {
                         for (var j = 0; j < width; j++)
                         {
-                            var color = this.scene.Trace(
-                                (double)(2 * j + 1 - width) / width,
-                                (double)(height - 2 * i + 1) / height);
+                            var color = Colors.Black;
+                            if (anti_aliasing)
+                            {
+                                var dx = (double)2 / 3 / width;
+                                var dy = (double)2 / 3 / height;
+                                for (var x = -1; x <= 1; x++)
+                                {
+                                    for (var y = -1; y <= 1; y++)
+                                    {
+                                        var color_k = this.scene.Trace(
+                                            (double)(2 * j + 1 - width) / width + dx * x,
+                                            (double)(height - 2 * i + 1) / height + dy * y);
+                                        color = Color.Add(color, Color.Multiply(color_k, (float)1 / 9));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                color = this.scene.Trace(
+                                    (double)(2 * j + 1 - width) / width,
+                                    (double)(height - 2 * i + 1) / height);
+                            }
                             var index = 3 * (i * width + j);
                             pixels[index + 0] = color.R;
                             pixels[index + 1] = color.G;

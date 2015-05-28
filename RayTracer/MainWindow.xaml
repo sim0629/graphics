@@ -7,7 +7,7 @@
         <Menu x:Name="xMenu" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Import .obj" />
-                <MenuItem Header="_Export .png" />
+                <MenuItem Header="_Export .png" x:Name="xExport" />
             </MenuItem>
             <MenuItem Header="_Render">
                 <MenuItem Header="_Start" x:Name="xStart" />

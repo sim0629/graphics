@@ -36,6 +36,7 @@ namespace Gyumin.Graphics.RayTracer
 
             this.Unloaded += (sender, e) => { Application.Current.Shutdown(); };
             this.xStart.Click += xStart_Click;
+            this.xExport.Click += xExport_Click;
         }
 
         private async void xStart_Click(object sender, RoutedEventArgs e)
@@ -44,6 +45,11 @@ namespace Gyumin.Graphics.RayTracer
             this.ConstructScene();
             this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
+        }
+
+        private void xExport_Click(object sender, RoutedEventArgs e)
+        {
+            FileUtil.SaveToPng(this.xImage.Source as BitmapSource);
         }
 
         private void ConstructScene()

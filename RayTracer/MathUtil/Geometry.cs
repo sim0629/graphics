@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +50,8 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
 
         public static bool Contains(Polygon polygon, Point3D point)
         {
-            Debug.Assert(Contains(polygon.Plane, point));
+            if (!Contains(polygon.Plane, point))
+                return false;
 
             Ray test_ray = null;
 
@@ -76,7 +76,8 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
                 }
             }
 
-            Debug.Assert(test_ray != null);
+            if (test_ray == null)
+                return false;
 
             var normal = Vector3D.CrossProduct(polygon.Plane.Normal, test_ray.Direction);
             var test_plane = new Plane(test_ray.Position, normal);

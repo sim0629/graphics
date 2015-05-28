@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +25,6 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
         public Vector3D NormalAt(Point3D point)
         {
             var normal = point - this.Center;
-            Debug.Assert(Geometry.IsZero(normal.Length - this.Radius));
             normal.Normalize();
             return normal;
         }

@@ -82,6 +82,7 @@
     <Compile Include="Model\Renderable.cs" />
     <Compile Include="Model\Scene.cs" />
     <Compile Include="Model\SimplePolygon.cs" />
+    <Compile Include="Model\Sphere.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

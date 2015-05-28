@@ -27,7 +27,7 @@ namespace Gyumin.Graphics.RayTracer.Model
             this.backgroundColor = backgroundColor;
         }
 
-        private Renderable FirstMeet(Ray ray, out Point3D at)
+        private Renderable FirstMeet(Ray ray, out Point3D at, Renderable except)
         {
             at = new Point3D();
             var found = this.objects.Select(renderable =>
@@ -36,7 +36,7 @@ namespace Gyumin.Graphics.RayTracer.Model
                 var intersects = renderable.Intersects(ray, out intersection);
                 return new { Renderable = renderable, Intersects = intersects, Intersection = intersection };
             })
-            .Where(result => result.Intersects)
+            .Where(result => result.Renderable != except && result.Intersects)
             .OrderBy(result => (result.Intersection - ray.Position).Length)
             .FirstOrDefault();
             if (found == null)
@@ -48,7 +48,7 @@ namespace Gyumin.Graphics.RayTracer.Model
         private Color Trace(Ray ray)
         {
             var at = new Point3D();
-            var renderable = this.FirstMeet(ray, out at);
+            var renderable = this.FirstMeet(ray, out at, null);
             if (renderable == null)
                 return this.backgroundColor;
 
@@ -71,7 +71,7 @@ namespace Gyumin.Graphics.RayTracer.Model
                 if (cos_t > Geometry.Epsilon)
                 {
                     var intersection = new Point3D();
-                    if (this.FirstMeet(to_light, out intersection) == null
+                    if (this.FirstMeet(to_light, out intersection, renderable) == null
                         || Geometry.LessOrEqual(light.DistanceFrom(at), (intersection - at).Length))
                     {
                         color = Color.Add(color,

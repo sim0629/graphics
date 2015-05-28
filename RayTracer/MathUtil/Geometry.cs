@@ -23,6 +23,12 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             return IsZero(diff) || diff < 0;
         }
 
+        public static bool GreaterOrEqual(double lhs, double rhs)
+        {
+            var diff = lhs - rhs;
+            return IsZero(diff) || diff > 0;
+        }
+
         public static double Apply(Plane plane, Point3D point)
         {
             return Vector3D.DotProduct(plane.Normal, (Vector3D)point) + plane.D;

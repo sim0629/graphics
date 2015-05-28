@@ -152,6 +152,13 @@ namespace Gyumin.Graphics.RayTracer
             scene.AddObject(back_wall_out_r);
             scene.AddObject(back_wall_out_l);
             scene.AddObject(back_wall_out_d);
+
+            var ball = new Sphere(
+                concrete,
+                new Point3D(-0.2, -0.5, -0.5),
+                0.25
+            );
+            scene.AddObject(ball);
         }
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n)

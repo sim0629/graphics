@@ -46,25 +46,29 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene()
         {
-            //*
-            var bulb = new PointLight(
-                new Point3D(0, 0.5, -0.5),
-                Color.FromRgb(200, 200, 200),
-                Colors.Black);
-            scene.AddLight(bulb);
-            /*/
-            for (var i = -2; i <= 2; i++)
+            if (!this.xSoftShadow.IsChecked)
             {
-                for (var j = -2; j <= 2; j++)
+                var bulb = new PointLight(
+                    new Point3D(0, 0.5, -0.5),
+                    Color.FromRgb(200, 200, 200),
+                    Colors.Black);
+                scene.AddLight(bulb);
+            }
+            else
+            {
+                for (var i = -2; i <= 2; i++)
                 {
-                    var bulb = new PointLight(
-                        new Point3D(0 + 0.05 * i, 0.5, -0.5 + 0.05 * j),
-                        Color.FromRgb(32, 32, 32),
-                        Colors.Black);
-                    scene.AddLight(bulb);
+                    for (var j = -2; j <= 2; j++)
+                    {
+                        var bulb = new PointLight(
+                            new Point3D(0 + 0.05 * i, 0.5, -0.5 + 0.05 * j),
+                            Color.FromRgb(32, 32, 32),
+                            Colors.Black);
+                        scene.AddLight(bulb);
+                    }
                 }
             }
-            //*/
+
             var sun = new DirectionalLight(
                 new Vector3D(1, -1.3, 1),
                 Colors.White,

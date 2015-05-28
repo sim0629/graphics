@@ -11,6 +11,8 @@
             </MenuItem>
             <MenuItem Header="_Render">
                 <MenuItem Header="_Start" x:Name="xStart" />
+                <Separator />
+                <MenuItem Header="Soft shado_w" IsCheckable="True" x:Name="xSoftShadow" />
             </MenuItem>
         </Menu>
         <Grid>

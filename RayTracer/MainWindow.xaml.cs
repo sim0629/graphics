@@ -37,12 +37,12 @@ namespace Gyumin.Graphics.RayTracer
             InitializeComponent();
 
             this.Unloaded += (sender, e) => { Application.Current.Shutdown(); };
-            this.xStart.Click += xStart_Click;
+            this.xRun.Click += xRun_Click;
             this.xImport.Click += xImport_Click;
             this.xExport.Click += xExport_Click;
         }
 
-        private async void xStart_Click(object sender, RoutedEventArgs e)
+        private async void xRun_Click(object sender, RoutedEventArgs e)
         {
             this.xMenu.IsEnabled = false;
             this.ConstructScene(this.xSoftShadow.IsChecked);

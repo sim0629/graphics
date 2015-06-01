@@ -10,9 +10,9 @@
                 <MenuItem Header="_Export .png" x:Name="xExport" />
             </MenuItem>
             <MenuItem Header="_Render">
-                <MenuItem Header="_Start" x:Name="xStart" />
+                <MenuItem Header="_Run" x:Name="xRun" />
                 <Separator />
-                <MenuItem Header="Soft shado_w" IsCheckable="True" x:Name="xSoftShadow" />
+                <MenuItem Header="_Soft shadow" IsCheckable="True" x:Name="xSoftShadow" />
                 <MenuItem Header="_Anti-aliasing" IsCheckable="True" x:Name="xAntiAliasing" />
             </MenuItem>
         </Menu>

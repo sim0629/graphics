@@ -45,7 +45,7 @@ namespace Gyumin.Graphics.RayTracer
         private async void xStart_Click(object sender, RoutedEventArgs e)
         {
             this.xMenu.IsEnabled = false;
-            this.ConstructScene();
+            this.ConstructScene(this.xSoftShadow.IsChecked);
             this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
         }
@@ -61,11 +61,11 @@ namespace Gyumin.Graphics.RayTracer
             FileUtil.SaveToPng(this.xImage.Source as BitmapSource);
         }
 
-        private void ConstructScene()
+        private void ConstructScene(bool soft_shadow)
         {
             this.scene = new Scene(Colors.DeepSkyBlue);
 
-            if (!this.xSoftShadow.IsChecked)
+            if (!soft_shadow)
             {
                 var bulb = new PointLight(
                     new Point3D(0, 0.5, -0.5),

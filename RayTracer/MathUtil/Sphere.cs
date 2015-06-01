@@ -28,5 +28,12 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             normal.Normalize();
             return normal;
         }
+
+        public void Move()
+        {
+            var center = this.Center;
+            center.X += 0.003;
+            this.Center = center;
+        }
     }
 }

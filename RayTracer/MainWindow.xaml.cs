@@ -32,6 +32,8 @@ namespace Gyumin.Graphics.RayTracer
 
         private Random random = new Random();
 
+        private SimpleSphere movable;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -45,7 +47,7 @@ namespace Gyumin.Graphics.RayTracer
         private async void xRun_Click(object sender, RoutedEventArgs e)
         {
             this.xMenu.IsEnabled = false;
-            this.ConstructScene(this.xSoftShadow.IsChecked);
+            this.ConstructScene(this.xSoftShadow.IsChecked, this.xMotionBlur.IsChecked);
             this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
         }
@@ -61,7 +63,7 @@ namespace Gyumin.Graphics.RayTracer
             FileUtil.SaveToPng(this.xImage.Source as BitmapSource);
         }
 
-        private void ConstructScene(bool soft_shadow)
+        private void ConstructScene(bool soft_shadow, bool motion_blur)
         {
             this.scene = new Scene((FloatColor)Colors.DeepSkyBlue);
 
@@ -250,6 +252,7 @@ namespace Gyumin.Graphics.RayTracer
                 0.1
             );
             scene.AddObject(bead_b);
+            this.movable = motion_blur ? bead_b : null;
 
             var bead_r = new SimpleSphere(
                 orange,
@@ -269,15 +272,9 @@ namespace Gyumin.Graphics.RayTracer
             }
         }
 
-        private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n, bool anti_aliasing)
+        private async Task<FloatColor[]> RenderOnceAsync(int width, int height, int n, bool anti_aliasing)
         {
-            this.Dispatcher.Invoke(() =>
-            {
-                this.xProgress.Minimum = 0;
-                this.xProgress.Maximum = width * height;
-                this.xProgress.Value = progress_value = 0;
-            });
-            var pixels = new byte[3 * width * height];
+            var colors = new FloatColor[width * height];
             var tasks = new List<Task>();
             for (var t = 0; t < n; t++)
             {
@@ -311,11 +308,8 @@ namespace Gyumin.Graphics.RayTracer
                                     (double)(2 * j + 1 - width) / width,
                                     (double)(height - 2 * i + 1) / height);
                             }
-                            var index = 3 * (i * width + j);
-                            var system_color = (Color)color;
-                            pixels[index + 0] = system_color.R;
-                            pixels[index + 1] = system_color.G;
-                            pixels[index + 2] = system_color.B;
+                            var index = i * width + j;
+                            colors[index] = color;
                             this.Dispatcher.Invoke(() =>
                             {
                                 this.xProgress.Value = ++this.progress_value;
@@ -327,6 +321,37 @@ namespace Gyumin.Graphics.RayTracer
                 tasks.Add(task);
             }
             await Task.WhenAll(tasks);
+            return colors;
+        }
+
+        private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n, bool anti_aliasing)
+        {
+            var total_time = this.movable != null ? 10 : 1;
+
+            this.Dispatcher.Invoke(() =>
+            {
+                this.xProgress.Minimum = 0;
+                this.xProgress.Maximum = width * height * total_time;
+                this.xProgress.Value = progress_value = 0;
+            });
+
+            var pixels = new byte[3 * width * height];
+            var total_colors = new FloatColor[width * height];
+            for (var time = 0; time < total_time; time++)
+            {
+                var current_colors = await this.RenderOnceAsync(width, height, n, anti_aliasing);
+                if(this.movable != null) movable.Move();
+                for (var index = 0; index < width * height; index++)
+                    total_colors[index] += current_colors[index];
+            }
+            for (var index = 0; index < width * height; index++)
+            {
+                var color = (Color)(total_colors[index] / total_time);
+                pixels[index * 3 + 0] = color.R;
+                pixels[index * 3 + 1] = color.G;
+                pixels[index * 3 + 2] = color.B;
+            }
+
             this.Dispatcher.Invoke(() =>
             {
                 this.xProgress.Value = progress_value = 0;

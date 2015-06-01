@@ -13,6 +13,7 @@
                 <MenuItem Header="_Run" x:Name="xRun" />
                 <Separator />
                 <MenuItem Header="_Soft shadow" IsCheckable="True" x:Name="xSoftShadow" />
+                <MenuItem Header="_Motion blur" IsCheckable="True" x:Name="xMotionBlur" />
                 <MenuItem Header="_Anti-aliasing" IsCheckable="True" x:Name="xAntiAliasing" />
             </MenuItem>
         </Menu>

@@ -54,5 +54,10 @@ namespace Gyumin.Graphics.RayTracer.Model
 
             return new Ray(point, U);
         }
+
+        public void Move()
+        {
+            this.sphere.Move();
+        }
     }
 }

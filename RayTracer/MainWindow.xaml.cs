@@ -24,7 +24,7 @@ namespace Gyumin.Graphics.RayTracer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Scene scene = new Scene(Colors.DeepSkyBlue);
+        private Scene scene;
 
         private int progress_value;
 
@@ -63,6 +63,8 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene()
         {
+            this.scene = new Scene(Colors.DeepSkyBlue);
+
             if (!this.xSoftShadow.IsChecked)
             {
                 var bulb = new PointLight(

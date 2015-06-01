@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace Gyumin.Graphics.RayTracer.Material
 {
     public class Phong
     {
-        public Color Ambient { get; private set; }
+        public FloatColor Ambient { get; private set; }
 
-        public Color Diffuse { get; private set; }
+        public FloatColor Diffuse { get; private set; }
 
-        public Color Specular { get; private set; }
+        public FloatColor Specular { get; private set; }
 
         public double Shininess { get; private set; }
 
@@ -23,7 +22,7 @@ namespace Gyumin.Graphics.RayTracer.Material
 
         public double N_Index { get; private set; }
 
-        public Phong(Color ambient, Color diffuse, Color specular, double shininess,
+        public Phong(FloatColor ambient, FloatColor diffuse, FloatColor specular, double shininess,
             double k_reflection, double k_refraction, double n_index)
         {
             this.Ambient = ambient;

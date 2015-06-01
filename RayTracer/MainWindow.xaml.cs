@@ -63,14 +63,14 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene(bool soft_shadow)
         {
-            this.scene = new Scene(Colors.DeepSkyBlue);
+            this.scene = new Scene((FloatColor)Colors.DeepSkyBlue);
 
             if (!soft_shadow)
             {
                 var bulb = new PointLight(
                     new Point3D(0, 0.5, -0.5),
-                    Color.FromRgb(200, 200, 200),
-                    Colors.Black);
+                    (FloatColor)Color.FromRgb(200, 200, 200),
+                    (FloatColor)Colors.Black);
                 scene.AddLight(bulb);
             }
             else
@@ -81,8 +81,8 @@ namespace Gyumin.Graphics.RayTracer
                     {
                         var bulb = new PointLight(
                             new Point3D(0 + 0.05 * i, 0.5, -0.5 + 0.05 * j),
-                            Color.FromRgb(32, 32, 32),
-                            Colors.Black);
+                            (FloatColor)Color.FromRgb(8, 8, 8),
+                            (FloatColor)Colors.Black);
                         scene.AddLight(bulb);
                     }
                 }
@@ -90,44 +90,44 @@ namespace Gyumin.Graphics.RayTracer
 
             var sun = new DirectionalLight(
                 new Vector3D(1, -1.3, 1),
-                Colors.White,
-                Color.FromRgb(200, 200, 200));
+                (FloatColor)Colors.White,
+                (FloatColor)Color.FromRgb(200, 200, 200));
             scene.AddLight(sun);
 
             var concrete = new Phong(
-                Color.FromRgb(50, 50, 50),
-                Color.FromRgb(150, 150, 150),
-                Colors.White, 5,
+                (FloatColor)Color.FromRgb(50, 50, 50),
+                (FloatColor)Color.FromRgb(150, 150, 150),
+                (FloatColor)Colors.White, 5,
                 0, 0, 1);
 
             var mirror = new Phong(
-                Color.FromRgb(32, 32, 32),
-                Colors.Black,
-                Colors.White, 100,
+                (FloatColor)Color.FromRgb(32, 32, 32),
+                (FloatColor)Colors.Black,
+                (FloatColor)Colors.White, 100,
                 0.9, 0, 1);
 
             var glass = new Phong(
-                Colors.Black,
-                Colors.White,
-                Colors.White, 100,
+                (FloatColor)Colors.Black,
+                (FloatColor)Colors.White,
+                (FloatColor)Colors.White, 100,
                 0.1, 0.9, 1.52);
 
             var royal = new Phong(
-                Colors.RoyalBlue,
-                Colors.RoyalBlue,
-                Colors.RoyalBlue, 100,
+                (FloatColor)Colors.RoyalBlue,
+                (FloatColor)Colors.RoyalBlue,
+                (FloatColor)Colors.RoyalBlue, 100,
                 0, 0.6, 1.52);
 
             var orange = new Phong(
-                Colors.OrangeRed,
-                Colors.OrangeRed,
-                Colors.OrangeRed, 100,
+                (FloatColor)Colors.OrangeRed,
+                (FloatColor)Colors.OrangeRed,
+                (FloatColor)Colors.OrangeRed, 100,
                 0, 0.6, 1.52);
 
             var marble = new Phong(
-                Color.FromRgb(50, 50, 50),
-                Colors.Beige,
-                Colors.White, 20,
+                (FloatColor)Color.FromRgb(50, 50, 50),
+                (FloatColor)Colors.Beige,
+                (FloatColor)Colors.White, 20,
                 0.15, 0, 1.6);
 
             var floor = new SimplePolygon(
@@ -289,7 +289,7 @@ namespace Gyumin.Graphics.RayTracer
                     {
                         for (var j = 0; j < width; j++)
                         {
-                            var color = Colors.Black;
+                            var color = (FloatColor)Colors.Black;
                             if (anti_aliasing)
                             {
                                 var dx = (double)2 / 3 / width;
@@ -301,7 +301,7 @@ namespace Gyumin.Graphics.RayTracer
                                         var color_k = this.scene.Trace(
                                             (double)(2 * j + 1 - width) / width + dx * x,
                                             (double)(height - 2 * i + 1) / height + dy * y);
-                                        color = Color.Add(color, Color.Multiply(color_k, (float)1 / 9));
+                                        color += color_k / (float)9;
                                     }
                                 }
                             }
@@ -312,9 +312,10 @@ namespace Gyumin.Graphics.RayTracer
                                     (double)(height - 2 * i + 1) / height);
                             }
                             var index = 3 * (i * width + j);
-                            pixels[index + 0] = color.R;
-                            pixels[index + 1] = color.G;
-                            pixels[index + 2] = color.B;
+                            var system_color = (Color)color;
+                            pixels[index + 0] = system_color.R;
+                            pixels[index + 1] = system_color.G;
+                            pixels[index + 2] = system_color.B;
                             this.Dispatcher.Invoke(() =>
                             {
                                 this.xProgress.Value = ++this.progress_value;

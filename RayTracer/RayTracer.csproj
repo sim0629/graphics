@@ -69,7 +69,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Material\ColorUtil.cs" />
+    <Compile Include="Material\FloatColor.cs" />
     <Compile Include="Material\Phong.cs" />
     <Compile Include="MathUtil\Geometry.cs" />
     <Compile Include="MathUtil\Coordinate.cs" />

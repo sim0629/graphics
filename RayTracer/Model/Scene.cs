@@ -14,7 +14,7 @@ namespace Gyumin.Graphics.RayTracer.Model
 
     public class Scene
     {
-        private Color backgroundColor;
+        private FloatColor backgroundColor;
 
         private List<Light> lights = new List<Light>();
 
@@ -22,7 +22,7 @@ namespace Gyumin.Graphics.RayTracer.Model
 
         private Camera camera = new Camera();
 
-        public Scene(Color backgroundColor)
+        public Scene(FloatColor backgroundColor)
         {
             this.backgroundColor = backgroundColor;
         }
@@ -46,9 +46,9 @@ namespace Gyumin.Graphics.RayTracer.Model
             return found.Renderable;
         }
 
-        private Color TransparentLight(Light light, Point3D at, Renderable except)
+        private FloatColor? TransparentLight(Light light, Point3D at, Renderable except)
         {
-            var color = Colors.White;
+            var color = (FloatColor)Colors.White;
             var unused = new Point3D();
             var ray = light.RayFrom(at);
             var distance = light.DistanceFrom(at);
@@ -69,22 +69,21 @@ namespace Gyumin.Graphics.RayTracer.Model
                 {
                     var k_refraction = renderable.Material.K_Refraction;
                     if (Geometry.IsZero(k_refraction))
-                        return Colors.Black;
-                    color = ColorUtil.ElementWiseMultiply(color,
-                        Color.Multiply(renderable.Material.Diffuse, (float)k_refraction));
+                        return null;
+                    color &= renderable.Material.Diffuse * (float)k_refraction;
                 }
             }
             return color;
         }
 
-        private Color Trace(Ray ray, Renderable except, int depth)
+        private FloatColor Trace(Ray ray, Renderable except, int depth)
         {
             var at = new Point3D();
             var renderable = this.FirstMeet(ray, out at, except);
             if (renderable == null)
                 return this.backgroundColor;
 
-            var color = Colors.Black;
+            var color = (FloatColor)Colors.Black;
 
             var k_a = renderable.Material.Ambient;
             var k_d = renderable.Material.Diffuse;
@@ -95,9 +94,7 @@ namespace Gyumin.Graphics.RayTracer.Model
 
             foreach (var light in this.lights)
             {
-                color = Color.Add(color,
-                    ColorUtil.ElementWiseMultiply(k_a,
-                        Color.Multiply(light.Ambient, (float)(1 - renderable.Material.K_Refraction))));
+                color += k_a & (light.Ambient * (float)(1 - renderable.Material.K_Refraction));
 
                 var to_light = light.RayFrom(at);
                 var cos_t = Vector3D.DotProduct(normal, to_light.Direction);
@@ -109,22 +106,14 @@ namespace Gyumin.Graphics.RayTracer.Model
                 if (cos_t > Geometry.Epsilon)
                 {
                     var transparent_light_color = this.TransparentLight(light, at, renderable);
-                    if (transparent_light_color != Colors.Black)
+                    if (transparent_light_color != null)
                     {
-                        var shadow_light_color = ColorUtil.ElementWiseMultiply(
-                            Color.Multiply(light.IntensityAt(at), (float)(1 - renderable.Material.K_Refraction)),
-                            transparent_light_color);
+                        var shadow_light_color = (light.IntensityAt(at) * (float)(1 - renderable.Material.K_Refraction)) & transparent_light_color.Value;
 
-                        color = Color.Add(color,
-                            Color.Multiply(
-                                ColorUtil.ElementWiseMultiply(k_d, shadow_light_color),
-                                (float)cos_t));
+                        color += (k_d & shadow_light_color) * (float)cos_t;
 
                         var reflected = Vector3D.DotProduct(2 * to_light.Direction, normal) * normal - to_light.Direction;
-                        color = Color.Add(color,
-                            Color.Multiply(
-                                ColorUtil.ElementWiseMultiply(k_s, shadow_light_color),
-                                (float)Math.Pow(Vector3D.DotProduct(reflected, -ray.Direction), n)));
+                        color += (k_s & shadow_light_color) * (float)Math.Pow(Vector3D.DotProduct(reflected, -ray.Direction), n);
                     }
                 }
             }
@@ -137,20 +126,20 @@ namespace Gyumin.Graphics.RayTracer.Model
             {
                 var reflection_ray = new Ray(at,
                     Vector3D.DotProduct(-2 * ray.Direction, normal) * normal + ray.Direction);
-                color = Color.Add(color, Color.Multiply(this.Trace(reflection_ray, renderable, depth + 1), (float)k_reflection));
+                color += this.Trace(reflection_ray, renderable, depth + 1) * (float)k_reflection;
             }
 
             var k_refraction = renderable.Material.K_Refraction;
             if (!Geometry.IsZero(k_refraction))
             {
                 var refraction_ray = renderable.Refracted(at, ray.Direction);
-                color = Color.Add(color, Color.Multiply(this.Trace(refraction_ray, renderable, depth + 1), (float)k_refraction));
+                color += this.Trace(refraction_ray, renderable, depth + 1) * (float)k_refraction;
             }
 
             return color;
         }
 
-        public Color Trace(double x, double y)
+        public FloatColor Trace(double x, double y)
         {
             var ray = this.camera.GetRayToScreen(x, y);
             return this.Trace(ray, null, 1);

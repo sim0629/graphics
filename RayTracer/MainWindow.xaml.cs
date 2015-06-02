@@ -48,7 +48,10 @@ namespace Gyumin.Graphics.RayTracer
         {
             this.xMenu.IsEnabled = false;
             this.ConstructScene(this.xSoftShadow.IsChecked, this.xMotionBlur.IsChecked);
-            this.xImage.Source = await this.RenderSceneAsync(Config.ImageWidth, Config.ImageHeight, Config.NumberOfWorkers, this.xAntiAliasing.IsChecked);
+            this.xImage.Source = await this.RenderSceneAsync(
+                Config.ImageWidth, Config.ImageHeight,
+                this.xMultiThreading.IsChecked ? Config.NumberOfWorkers : 1,
+                this.xAntiAliasing.IsChecked);
             this.xMenu.IsEnabled = true;
         }
 

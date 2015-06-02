@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,8 @@ namespace Gyumin.Graphics.RayTracer
         private Random random = new Random();
 
         private SimpleSphere movable;
+
+        private Stopwatch watch = new Stopwatch();
 
         public MainWindow()
         {
@@ -315,6 +318,7 @@ namespace Gyumin.Graphics.RayTracer
                             colors[index] = color;
                             this.Dispatcher.Invoke(() =>
                             {
+                                this.xElapsed.Text = String.Format("{0:0.0}", this.watch.Elapsed.TotalSeconds);
                                 this.xProgress.Value = ++this.progress_value;
                             });
                         }
@@ -333,6 +337,7 @@ namespace Gyumin.Graphics.RayTracer
 
             this.Dispatcher.Invoke(() =>
             {
+                this.watch.Restart();
                 this.xProgress.Minimum = 0;
                 this.xProgress.Maximum = width * height * total_time;
                 this.xProgress.Value = progress_value = 0;
@@ -355,6 +360,7 @@ namespace Gyumin.Graphics.RayTracer
                 pixels[index * 3 + 2] = color.B;
             }
 
+            watch.Stop();
             this.Dispatcher.Invoke(() =>
             {
                 this.xProgress.Value = progress_value = 0;

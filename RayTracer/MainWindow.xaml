@@ -24,6 +24,8 @@
                     DockPanel.Dock="Bottom"
                     HorizontalAlignment="Stretch"
                     Background="LightGray">
+            <TextBlock x:Name="xElapsed" Text="0" />
+            <TextBlock Text="s " />
             <ProgressBar x:Name="xProgress"
                          Width="200"/>
             <TextBlock Text=" .stl: " />

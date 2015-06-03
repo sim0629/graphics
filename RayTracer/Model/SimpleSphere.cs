@@ -12,7 +12,7 @@ namespace Gyumin.Graphics.RayTracer.Model
 
     public class SimpleSphere : Renderable
     {
-        private Sphere sphere;
+        protected Sphere sphere;
 
         public SimpleSphere(Phong material, Point3D center, double radius)
         {

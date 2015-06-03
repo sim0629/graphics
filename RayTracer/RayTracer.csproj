@@ -89,6 +89,7 @@
     <Compile Include="Model\SimplePolygon.cs" />
     <Compile Include="Model\SimpleSphere.cs" />
     <Compile Include="Model\TexturedRectangle.cs" />
+    <Compile Include="Model\TexturedSphere.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,6 +121,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Lenna.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\WorldMap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

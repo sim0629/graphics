@@ -33,9 +33,9 @@ namespace Gyumin.Graphics.RayTracer.Model
             return new Ray(point, direction);
         }
 
-        public virtual FloatColor DiffuseAt(Point3D point)
+        public virtual FloatColor? TextureColorAt(Point3D point)
         {
-            return this.Material.Diffuse;
+            return null;
         }
     }
 }

@@ -86,9 +86,15 @@ namespace Gyumin.Graphics.RayTracer.Model
             var color = (FloatColor)Colors.Black;
 
             var k_a = renderable.Material.Ambient;
-            var k_d = renderable.DiffuseAt(at);
+            var k_d = renderable.Material.Diffuse;
             var k_s = renderable.Material.Specular;
             var n = renderable.Material.Shininess;
+            var texture_color = renderable.TextureColorAt(at);
+            if (texture_color != null)
+            {
+                k_a &= texture_color.Value;
+                k_d &= texture_color.Value;
+            }
 
             var normal = renderable.NormalAt(at);
 

@@ -22,7 +22,7 @@ namespace Gyumin.Graphics.RayTracer.Model
             this.texture_pixels = BitmapUtil.GetPixels(new BitmapImage(texture_path));
         }
 
-        public override FloatColor DiffuseAt(Point3D point)
+        public override FloatColor? TextureColorAt(Point3D point)
         {
             var U = this.polygon[3] - this.polygon[0];
             var V = this.polygon[1] - this.polygon[0];
@@ -40,7 +40,7 @@ namespace Gyumin.Graphics.RayTracer.Model
             var x = Math.Min(width, Math.Max(0, (int)(u * width)));
             var y = Math.Min(height, Math.Max(0, (int)(v * height)));
 
-            return base.DiffuseAt(point) & (FloatColor)texture_pixels[x, y];
+            return (FloatColor)texture_pixels[x, y];
         }
     }
 }

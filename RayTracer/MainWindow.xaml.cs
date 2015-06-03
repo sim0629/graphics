@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 namespace Gyumin.Graphics.RayTracer
 {
     using Material;
+    using MathUtil;
     using Model;
 
     /// <summary>
@@ -278,7 +279,8 @@ namespace Gyumin.Graphics.RayTracer
             }
 
             var picture = new TexturedRectangle(
-                new Phong((FloatColor)Colors.Black,
+                new Phong(
+                    (FloatColor)Colors.Black,
                     (FloatColor)Colors.White,
                     (FloatColor)Colors.White, 50,
                     0.3, 0, 1),
@@ -288,6 +290,18 @@ namespace Gyumin.Graphics.RayTracer
                 new Point3D(0.99, 0.4, -0.2),
                 new Uri("Resources/Lenna.png", UriKind.Relative));
             scene.AddObject(picture);
+
+            var globe = new TexturedSphere(
+                new Phong(
+                    (FloatColor)Colors.White,
+                    (FloatColor)Colors.White,
+                    (FloatColor)Colors.White, 2,
+                    0, 0, 1),
+                new Point3D(-0.5, 0.15, -0.4),
+                0.3,
+                new Uri("Resources/WorldMap.png", UriKind.Relative),
+                new Coordinate(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Vector3D(0, 1, 0)));
+            scene.AddObject(globe);
         }
 
         private async Task<FloatColor[]> RenderOnceAsync(int width, int height, int n, bool anti_aliasing)

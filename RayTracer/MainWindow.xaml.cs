@@ -72,7 +72,7 @@ namespace Gyumin.Graphics.RayTracer
 
         private void ConstructScene(bool soft_shadow, bool motion_blur)
         {
-            this.scene = new Scene((FloatColor)Colors.DeepSkyBlue);
+            this.scene = new Scene((FloatColor)Color.FromRgb(1, 100, 200));
 
             if (!soft_shadow)
             {
@@ -100,17 +100,17 @@ namespace Gyumin.Graphics.RayTracer
             var sun = new DirectionalLight(
                 new Vector3D(1, -1.3, 1),
                 (FloatColor)Colors.White,
-                (FloatColor)Color.FromRgb(200, 200, 200));
+                (FloatColor)Colors.White);
             scene.AddLight(sun);
 
             var concrete = new Phong(
-                (FloatColor)Color.FromRgb(50, 50, 50),
+                (FloatColor)Color.FromRgb(120, 120, 120),
                 (FloatColor)Color.FromRgb(150, 150, 150),
-                (FloatColor)Colors.White, 5,
+                (FloatColor)Color.FromRgb(150, 150, 150), 1,
                 0, 0, 1);
 
             var mirror = new Phong(
-                (FloatColor)Color.FromRgb(32, 32, 32),
+                (FloatColor)Color.FromRgb(28, 28, 28),
                 (FloatColor)Colors.Black,
                 (FloatColor)Colors.White, 100,
                 0.9, 0, 1);
@@ -119,7 +119,7 @@ namespace Gyumin.Graphics.RayTracer
                 (FloatColor)Colors.Black,
                 (FloatColor)Colors.White,
                 (FloatColor)Colors.White, 100,
-                0.1, 0.9, 1.52);
+                0.2, 0.9, 1.52);
 
             var royal = new Phong(
                 (FloatColor)Colors.RoyalBlue,
@@ -134,7 +134,7 @@ namespace Gyumin.Graphics.RayTracer
                 0, 0.6, 1.52);
 
             var marble = new Phong(
-                (FloatColor)Color.FromRgb(50, 50, 50),
+                (FloatColor)Color.FromRgb(40, 40, 40),
                 (FloatColor)Colors.Beige,
                 (FloatColor)Colors.White, 20,
                 0.15, 0, 1.6);
@@ -302,6 +302,19 @@ namespace Gyumin.Graphics.RayTracer
                 new Uri("Resources/WorldMap.png", UriKind.Relative),
                 new Coordinate(new Vector3D(-1, 0, 0), new Vector3D(0, 0, 1), new Vector3D(0, 1, 0)));
             scene.AddObject(globe);
+
+            var beach = new TexturedRectangle(
+                new Phong(
+                    (FloatColor)Colors.White,
+                    (FloatColor)Colors.Black,
+                    (FloatColor)Colors.Black, 1,
+                    0, 0, 1),
+                new Point3D(-1.8, 2.2, -6),
+                new Point3D(-1.8, -1.8, -6),
+                new Point3D(5, -1.8, -6),
+                new Point3D(5, 2.2, -6),
+                new Uri("Resources/Beach.png", UriKind.Relative));
+            scene.AddObject(beach);
         }
 
         private async Task<FloatColor[]> RenderOnceAsync(int width, int height, int n, bool anti_aliasing)

@@ -61,6 +61,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BitmapUtil.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -87,6 +88,7 @@
     <Compile Include="Model\Scene.cs" />
     <Compile Include="Model\SimplePolygon.cs" />
     <Compile Include="Model\SimpleSphere.cs" />
+    <Compile Include="Model\TexturedRectangle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,6 +117,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Lenna.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -276,6 +276,18 @@ namespace Gyumin.Graphics.RayTracer
                     0.5);
                 scene.AddObject(stl);
             }
+
+            var picture = new TexturedRectangle(
+                new Phong((FloatColor)Colors.Black,
+                    (FloatColor)Colors.White,
+                    (FloatColor)Colors.White, 50,
+                    0.3, 0, 1),
+                new Point3D(0.99, 0.4, -0.7),
+                new Point3D(0.99, -0.1, -0.7),
+                new Point3D(0.99, -0.1, -0.2),
+                new Point3D(0.99, 0.4, -0.2),
+                new Uri("Resources/Lenna.png", UriKind.Relative));
+            scene.AddObject(picture);
         }
 
         private async Task<FloatColor[]> RenderOnceAsync(int width, int height, int n, bool anti_aliasing)

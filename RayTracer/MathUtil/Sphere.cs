@@ -29,10 +29,12 @@ namespace Gyumin.Graphics.RayTracer.MathUtil
             return normal;
         }
 
+        private int count = 0;
+
         public void Move()
         {
             var center = this.Center;
-            center.X += 0.003;
+            center.X -= 0.03 / (++this.count);
             this.Center = center;
         }
     }

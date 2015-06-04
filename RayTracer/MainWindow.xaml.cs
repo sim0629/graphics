@@ -84,13 +84,14 @@ namespace Gyumin.Graphics.RayTracer
             }
             else
             {
-                for (var i = -2; i <= 2; i++)
+                var ssd = Config.SoftShadowDegree;
+                for (var i = -ssd; i <= ssd; i++)
                 {
-                    for (var j = -2; j <= 2; j++)
+                    for (var j = -ssd; j <= ssd; j++)
                     {
                         var bulb = new PointLight(
-                            new Point3D(0 + 0.05 * i, 0.5, -0.5 + 0.05 * j),
-                            (FloatColor)Color.FromRgb(8, 8, 8),
+                            new Point3D(0 + (0.05 / ssd) * i, 0.5, -0.5 + (0.05 / ssd) * j),
+                            (FloatColor)Color.FromRgb(200, 200, 200) / (float)((2 * ssd + 1) * (2 * ssd + 1)),
                             (FloatColor)Colors.Black);
                         scene.AddLight(bulb);
                     }
@@ -334,16 +335,17 @@ namespace Gyumin.Graphics.RayTracer
                             var color = (FloatColor)Colors.Black;
                             if (anti_aliasing)
                             {
-                                var dx = (double)2 / 3 / width;
-                                var dy = (double)2 / 3 / height;
-                                for (var x = -1; x <= 1; x++)
+                                var aad = Config.AntiAliasingDegree;
+                                var dx = (double)2 / (2 * aad + 1) / width;
+                                var dy = (double)2 / (2 * aad + 1) / height;
+                                for (var x = -aad; x <= aad; x++)
                                 {
-                                    for (var y = -1; y <= 1; y++)
+                                    for (var y = -aad; y <= aad; y++)
                                     {
                                         var color_k = this.scene.Trace(
                                             (double)(2 * j + 1 - width) / width + dx * x,
                                             (double)(height - 2 * i + 1) / height + dy * y);
-                                        color += color_k / (float)9;
+                                        color += color_k / (float)((2 * aad + 1) * (2 * aad + 1));
                                     }
                                 }
                             }
@@ -372,7 +374,7 @@ namespace Gyumin.Graphics.RayTracer
 
         private async Task<BitmapSource> RenderSceneAsync(int width, int height, int n, bool anti_aliasing)
         {
-            var total_time = this.movable != null ? 10 : 1;
+            var total_time = this.movable != null ? Config.MotionBlurDuration : 1;
 
             this.Dispatcher.Invoke(() =>
             {
